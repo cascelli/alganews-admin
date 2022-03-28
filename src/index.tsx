@@ -4,7 +4,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import 'antd/dist/antd.css';
-import './index.css';
 
 import { Layout, Menu, Breadcrumb } from 'antd';
 import {
@@ -12,6 +11,8 @@ import {
   LaptopOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
+
+import './index.css';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
