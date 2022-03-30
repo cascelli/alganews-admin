@@ -11,7 +11,12 @@ const { SubMenu } = Menu; // Primeiro importa o Menu e depois desconstroi o SubM
 
 export default function DefaultLayoutSidebar() {
   return (
-    <Sider width={200} className='site-layout-background'>
+    <Sider
+      width={200}
+      className='site-layout-background'
+      breakpoint='lg'
+      collapsedWidth='0'
+    >
       <Menu
         mode='inline'
         defaultSelectedKeys={['1']}
