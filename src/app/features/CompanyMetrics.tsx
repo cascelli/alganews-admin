@@ -34,11 +34,20 @@ export default function CompanyMetrics() {
   const config: AreaConfig = {
     data,
     height: 400,
-    color: ['#274960', '#0099ff'],
+    color: ['#0099ff', '#274960'],
     areaStyle: { fillOpacity: 1 },
     xField: 'yearMonth',
     yField: 'value',
     seriesField: 'category',
+    legend: {
+      itemName: {
+        formatter(legend) {
+          return legend === 'totalRevenues'
+            ? 'Receitas'
+            : 'Despesas';
+        },
+      },
+    },
     point: {
       size: 5,
       shape: 'circle',
