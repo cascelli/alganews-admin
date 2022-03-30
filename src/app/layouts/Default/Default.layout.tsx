@@ -17,7 +17,7 @@ export default function DefaultLayout(
   return (
     <Layout>
       <DefaultLayoutHeader />
-      <Layout>
+      <Layout id={'PageLayout'}>
         <DefaultLayoutSidebar />
         <Layout style={{ padding: '0 24px 24px' }}>
           <Breadcrumb />
