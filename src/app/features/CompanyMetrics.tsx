@@ -73,6 +73,7 @@ export default function CompanyMetrics() {
         };
       },
     },
+    yAxis: {}, // Desabilitar : yAxis: false
     xAxis: {
       label: {
         formatter(item) {
