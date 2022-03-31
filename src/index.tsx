@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+//import App from './App'; // Substituido pelo componente Routes
 import reportWebVitals from './reportWebVitals';
 
 import 'antd/dist/antd.css';
@@ -10,12 +10,14 @@ import './index.css';
 import { Provider } from 'react-redux';
 import { store } from './core/store';
 import DefaultLayout from './app/layouts/Default';
+import Routes from './app/routes';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <DefaultLayout>
-        <App />
+        {/* <App /> */}
+        <Routes />
       </DefaultLayout>
     </Provider>
   </React.StrictMode>,
