@@ -11,14 +11,17 @@ import { Provider } from 'react-redux';
 import { store } from './core/store';
 import DefaultLayout from './app/layouts/Default';
 import Routes from './app/routes';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <DefaultLayout>
-        {/* <App /> */}
-        <Routes />
-      </DefaultLayout>
+      <BrowserRouter>
+        <DefaultLayout>
+          {/* <App /> */}
+          <Routes />
+        </DefaultLayout>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
