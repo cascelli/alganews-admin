@@ -11,7 +11,7 @@ import {
   FallOutlined,
 } from '@ant-design/icons';
 
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const { Sider } = Layout; // Primeiro importa o Layout e depois desconstroi o Sider do Layout
 const { SubMenu } = Menu; // Primeiro importa o Menu e depois desconstroi o SubMenu do Menu
@@ -32,11 +32,11 @@ export default function DefaultLayoutSidebar() {
         style={{ height: '100%', borderRight: 0 }}
       >
         <Menu.Item
-          key={'/'}
+          key={'0'}
           onClick={() => history.push('/')}
           icon={<HomeOutlined />}
         >
-          Home
+          <Link to={'/'}>Home</Link>
         </Menu.Item>
         <SubMenu
           key='sub1'
@@ -48,7 +48,7 @@ export default function DefaultLayoutSidebar() {
             onClick={() => history.push('/usuarios')}
             icon={<TableOutlined />}
           >
-            Consulta
+            <Link to={'/usuarios'}>Consulta</Link>
           </Menu.Item>
           <Menu.Item
             key='/usuarios/cadastro'
@@ -57,7 +57,7 @@ export default function DefaultLayoutSidebar() {
             }
             icon={<PlusCircleOutlined />}
           >
-            Cadastro
+            <Link to={'/usuarios/cadastro'}>Cadastro</Link>
           </Menu.Item>
         </SubMenu>
         <SubMenu
@@ -70,7 +70,7 @@ export default function DefaultLayoutSidebar() {
             onClick={() => history.push('/pagamentos')}
             icon={<TableOutlined />}
           >
-            Consulta
+            <Link to={'/pagamentos'}>Consulta</Link>
           </Menu.Item>
           <Menu.Item
             key='/pagamentos/cadastro'
@@ -79,7 +79,9 @@ export default function DefaultLayoutSidebar() {
             }
             icon={<PlusCircleOutlined />}
           >
-            Cadastro
+            <Link to={'/pagamentos/cadastro'}>
+              Cadastro
+            </Link>
           </Menu.Item>
         </SubMenu>
         <SubMenu
@@ -94,7 +96,9 @@ export default function DefaultLayoutSidebar() {
             }
             icon={<FallOutlined />}
           >
-            Despesa
+            <Link to={'/fluxo-de-caixa/despesas'}>
+              Despesa
+            </Link>
           </Menu.Item>
           <Menu.Item
             key='/fluxo-de-caixa/receitas'
@@ -103,7 +107,9 @@ export default function DefaultLayoutSidebar() {
             }
             icon={<RiseOutlined />}
           >
-            Receita
+            <Link to={'/fluxo-de-caixa/receitas'}>
+              Receita
+            </Link>
           </Menu.Item>
         </SubMenu>
       </Menu>
