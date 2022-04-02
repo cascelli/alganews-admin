@@ -1,10 +1,12 @@
-import { Menu, Layout } from 'antd';
+import { Menu, Layout, Row, Avatar } from 'antd';
+import logo from '../../../assets/logo.svg';
 
 const { Header } = Layout; // Primeiro importa o Layout e depois desconstroi o Header do Layout
 
 export default function DefaultLayoutHeader() {
   return (
     <Header className='header'>
+      {/*
       <div className='logo' />
       <Menu
         theme='dark'
@@ -15,6 +17,17 @@ export default function DefaultLayoutHeader() {
         <Menu.Item key='2'>nav 2</Menu.Item>
         <Menu.Item key='3'>nav 3</Menu.Item>
       </Menu>
+      */}
+
+      <Row
+        justify={'space-between'}
+        style={{ height: '100%' }}
+        align='middle'
+      >
+        {/* <div style={{ color: '#fff' }}>logo</div> */}
+        <img src={logo} alt='Alganews Admin'></img>
+        <Avatar />
+      </Row>
     </Header>
   );
 }
