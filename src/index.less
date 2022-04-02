@@ -26,10 +26,17 @@
 @layout-trigger-background: #274060;
 @layout-trigger-height: 120px;
 
+.ant-layout-sider-zero-width-trigger {
+  background-color: @text-color;
+}
 /* Uso com temas - Fim */
 
 #root > section.ant-layout {
   min-height: 100vh;
+
+  /* Ajustes sutis com temas e less */
+  max-width: 1190px;
+  margin: 0 auto;
 }
 
 /* fixando a barra de menu no topo mesmo com scroll da tela */
@@ -37,6 +44,10 @@
   position: fixed;
   z-index: 2;
   width: 100%;
+
+  /* Ajustes sutis com temas e less */
+  left: 0;
+  box-shadow: 0 0 20px -10px rgba(@text-color, 0.5);
 }
 
 /* Deixando o menu lateral sobre o conteudoda pagina principal para evitar shrink da mesma */
