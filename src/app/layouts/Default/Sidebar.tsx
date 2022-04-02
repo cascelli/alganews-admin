@@ -11,13 +11,26 @@ import {
   FallOutlined,
 } from '@ant-design/icons';
 
-import { Link, useHistory } from 'react-router-dom';
+import {
+  Link,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
+import { useEffect } from 'react';
 
 const { Sider } = Layout; // Primeiro importa o Layout e depois desconstroi o Sider do Layout
 const { SubMenu } = Menu; // Primeiro importa o Menu e depois desconstroi o SubMenu do Menu
 
 export default function DefaultLayoutSidebar() {
   const history = useHistory();
+  const location = useLocation();
+
+  // Debug de location
+  useEffect(() => {
+    console.log(location);
+    console.log(location.pathname.split('/'[1]));
+  }, [location]); // Toda vez que mudar a location o hook useEffect é executado
+
   return (
     <Sider
       width={200}
@@ -27,19 +40,23 @@ export default function DefaultLayoutSidebar() {
     >
       <Menu
         mode='inline'
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
+        // defaultSelectedKeys={['1']} // Trocando de um valor fixo para um valor dinamico
+        defaultSelectedKeys={[location.pathname]}
+        // defaultOpenKeys={['sub1']} // Trocando de um valor fixo para um valor dinamico
+        defaultOpenKeys={[location.pathname.split('/')[1]]}
         style={{ height: '100%', borderRight: 0 }}
       >
         <Menu.Item
-          key={'0'}
+          // key={'0'}
+          key={'/'}
           onClick={() => history.push('/')}
           icon={<HomeOutlined />}
         >
           <Link to={'/'}>Home</Link>
         </Menu.Item>
         <SubMenu
-          key='sub1'
+          // key='sub1'
+          key='usuarios'
           icon={<UserOutlined />}
           title='usuários'
         >
@@ -61,7 +78,8 @@ export default function DefaultLayoutSidebar() {
           </Menu.Item>
         </SubMenu>
         <SubMenu
-          key='sub2'
+          // key='sub2'
+          key='pagamentos'
           icon={<LaptopOutlined />}
           title='Pagamentos'
         >
@@ -85,7 +103,8 @@ export default function DefaultLayoutSidebar() {
           </Menu.Item>
         </SubMenu>
         <SubMenu
-          key='sub3'
+          // key='sub3'
+          key='fluxo-de-caixa'
           icon={<DiffOutlined />}
           title='Fluxo de caixa'
         >
