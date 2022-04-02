@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 //import App from './App'; // Substituido pelo componente Routes
 import reportWebVitals from './reportWebVitals';
-
-import 'antd/dist/antd.css';
-
-import './index.css';
-
-import { Provider } from 'react-redux';
 import { store } from './core/store';
 import DefaultLayout from './app/layouts/Default';
 import Routes from './app/routes';
-import { BrowserRouter } from 'react-router-dom';
+
+// import 'antd/dist/antd.css'; //Renomeado para index.less para aplicar temas
+
+// import './index.css'; //Renomeado para index.less para aplicar temas
+import './index.less';
 
 ReactDOM.render(
   <React.StrictMode>
