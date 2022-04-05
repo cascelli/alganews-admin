@@ -1,4 +1,12 @@
-import { Button, Switch, Table, Tag } from 'antd';
+import {
+  Avatar,
+  Button,
+  Space,
+  Switch,
+  Table,
+  Tag,
+  Typography,
+} from 'antd';
 import { User } from 'danielbonifacio-sdk';
 import { format } from 'date-fns';
 import { useEffect } from 'react';
@@ -26,6 +34,18 @@ export default function UserList() {
           {
             dataIndex: 'name',
             title: 'Nome',
+            render(name: string, row) {
+              // passando a propriedade (name) e o objeto inteiro (row) da linha
+              return (
+                <Space>
+                  <Avatar
+                    size={'small'} // define o tamanho small para deixar o avatar menor ainda
+                    src={row.avatarUrls.small} // define a imagem a partir da row
+                  />
+                  <Typography.Text>{name}</Typography.Text>
+                </Space>
+              );
+            },
           },
           {
             dataIndex: 'email',
