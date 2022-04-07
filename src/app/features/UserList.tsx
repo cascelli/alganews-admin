@@ -8,7 +8,7 @@ import {
   Typography,
 } from 'antd';
 import { User } from 'danielbonifacio-sdk';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useEffect } from 'react';
 import useUsers from '../../core/hooks/useUsers';
 import {
@@ -42,7 +42,12 @@ export default function UserList() {
                     size={'small'} // define o tamanho small para deixar o avatar menor ainda
                     src={row.avatarUrls.small} // define a imagem a partir da row
                   />
-                  <Typography.Text>{name}</Typography.Text>
+                  <Typography.Text
+                    ellipsis // define o tamanho maximo do texto e acrescenta ellipsis no final
+                    style={{ maxWidth: 180 }}
+                  >
+                    {name}
+                  </Typography.Text>
                 </Space>
               );
             },
@@ -50,6 +55,7 @@ export default function UserList() {
           {
             dataIndex: 'email',
             title: 'E-mail',
+            ellipsis: true, // limita o texto acrescentando ellipsis no final
           },
           {
             dataIndex: 'role',
@@ -77,7 +83,8 @@ export default function UserList() {
             align: 'center',
             render(createdAt: string) {
               return format(
-                new Date(createdAt),
+                // new Date(createdAt),
+                parseISO(createdAt),
                 'dd/MM/yyyy'
               );
             },
