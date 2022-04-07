@@ -34,6 +34,7 @@ export default function UserList() {
           {
             dataIndex: 'name',
             title: 'Nome',
+            width: 160,
             render(name: string, row) {
               // passando a propriedade (name) e o objeto inteiro (row) da linha
               return (
@@ -44,7 +45,7 @@ export default function UserList() {
                   />
                   <Typography.Text
                     ellipsis // define o tamanho maximo do texto e acrescenta ellipsis no final
-                    style={{ maxWidth: 180 }}
+                    style={{ maxWidth: 120 }}
                   >
                     {name}
                   </Typography.Text>
@@ -56,6 +57,7 @@ export default function UserList() {
             dataIndex: 'email',
             title: 'E-mail',
             ellipsis: true, // limita o texto acrescentando ellipsis no final
+            width: 160, // Define uma largura para a coluna
           },
           {
             dataIndex: 'role',
