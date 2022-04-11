@@ -25,7 +25,7 @@ import { ColumnProps } from 'antd/lib/table';
 
 export default function UserList() {
   // define uma constante para receber o hook useUsers
-  const { users, fetchUsers, toggleUserStatus } =
+  const { users, fetchUsers, toggleUserStatus, fetching } =
     useUsers();
 
   // Quando carregar esse componente na aplicacao chama o metodo useEffect
@@ -94,6 +94,7 @@ export default function UserList() {
   return (
     <>
       <Table<User.Summary>
+        loading={fetching}
         dataSource={users}
         columns={[
           {
