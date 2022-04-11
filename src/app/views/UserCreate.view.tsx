@@ -1,3 +1,9 @@
+import UserForm from '../features/UserForm';
+
 export default function UserCreateView() {
-  return <div>toDo: UserCreateView</div>;
+  return (
+    <>
+      <UserForm />
+    </>
+  );
 }
