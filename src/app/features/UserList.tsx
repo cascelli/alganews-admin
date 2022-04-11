@@ -15,10 +15,12 @@ import {
   EyeOutlined,
   EditOutlined,
 } from '@ant-design/icons';
+import { toggleUserStatus } from '../../core/store/User.reducer';
 
 export default function UserList() {
   // define uma constante para receber o hook useUsers
-  const { users, fetchUsers } = useUsers();
+  const { users, fetchUsers, toggleUserStatus } =
+    useUsers();
 
   // Quando carregar esse componente na aplicacao chama o metodo useEffect
   useEffect(() => {
@@ -95,8 +97,15 @@ export default function UserList() {
             dataIndex: 'active',
             title: 'Ativo',
             align: 'center',
-            render(active: boolean) {
-              return <Switch defaultChecked={active} />;
+            render(active: boolean, user) {
+              return (
+                <Switch
+                  onChange={() => {
+                    toggleUserStatus(user);
+                  }}
+                  defaultChecked={active}
+                />
+              );
             },
           },
           {

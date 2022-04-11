@@ -22,15 +22,40 @@ export const getAllUsers = createAsyncThunk(
   async () => UserService.getAllUsers()
 );
 
+export const toggleUserStatus = createAsyncThunk(
+  'user/toggleUserStatus',
+  async (user: User.Summary | User.Detailed) => {
+    user.active === true
+      ? await UserService.deactivateExistingUser(user.id)
+      : await UserService.activateExistingUser(user.id);
+
+    return user;
+  }
+);
 export default createReducer(initialState, (builder) => {
-  const success = isFulfilled(getAllUsers);
-  const error = isRejected(getAllUsers);
-  const loading = isPending(getAllUsers);
+  const success = isFulfilled(
+    getAllUsers,
+    toggleUserStatus
+  );
+  const error = isRejected(getAllUsers, toggleUserStatus);
+  const loading = isPending(getAllUsers, toggleUserStatus);
 
   builder
     .addCase(getAllUsers.fulfilled, (state, action) => {
       state.list = action.payload;
     })
+    /*
+    .addCase(
+      toggleUserStatus.fulfilled,
+      (state, action) => {
+        state.list = state.list.map((user) => {
+          if (user.id === action.payload.id)
+            return { ...user, active: !user.active };
+          return user;
+        });
+      }
+    )
+    */
     .addMatcher(success, (state) => {
       state.fetching = false;
     })
