@@ -100,27 +100,28 @@ export default function UserList() {
         pagination={false}
         columns={[
           {
-            dataIndex: 'name',
-            title: 'Nome',
-            ...getColumnSearchProps('name', 'Nome'),
-            width: 160,
-            render(name: string, row) {
-              // passando a propriedade (name) e o objeto inteiro (row) da linha
+            dataIndex: 'avatarUrls',
+            title: '',
+            width: 48,
+            fixed: 'left',
+            render(
+              avatarUrls: User.Summary['avatarUrls'],
+              row
+            ) {
               return (
-                <Space>
-                  <Avatar
-                    size={'small'} // define o tamanho small para deixar o avatar menor ainda
-                    src={row.avatarUrls.small} // define a imagem a partir da row
-                  />
-                  <Typography.Text
-                    ellipsis // define o tamanho maximo do texto e acrescenta ellipsis no final
-                    style={{ maxWidth: 120 }}
-                  >
-                    {name}
-                  </Typography.Text>
-                </Space>
+                <Avatar
+                  size={'small'} // define o tamanho small para deixar o avatar menor ainda
+                  src={avatarUrls.small} // define a imagem a partir da row
+                />
               );
             },
+          },
+          {
+            dataIndex: 'name',
+            title: 'Nome',
+            width: 160,
+            ellipsis: true,
+            ...getColumnSearchProps('name', 'Nome'),
           },
           {
             dataIndex: 'email',
@@ -133,6 +134,7 @@ export default function UserList() {
             dataIndex: 'role',
             title: 'Perfil',
             align: 'center',
+            width: 100,
             render(role) {
               return (
                 <Tag
@@ -153,6 +155,7 @@ export default function UserList() {
             dataIndex: 'createdAt',
             title: 'Criação',
             align: 'center',
+            width: 120,
             render(createdAt: string) {
               return format(
                 // new Date(createdAt),
@@ -165,6 +168,7 @@ export default function UserList() {
             dataIndex: 'active',
             title: 'Ativo',
             align: 'center',
+            width: 100,
             render(active: boolean, user) {
               return (
                 <Switch
@@ -180,6 +184,7 @@ export default function UserList() {
             dataIndex: 'id',
             title: 'Ações',
             align: 'center',
+            width: 100,
             render() {
               return (
                 <>
