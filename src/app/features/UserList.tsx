@@ -96,6 +96,8 @@ export default function UserList() {
       <Table<User.Summary>
         loading={fetching}
         dataSource={users}
+        //pagination={{ pageSize: 2 }}
+        pagination={false}
         columns={[
           {
             dataIndex: 'name',
