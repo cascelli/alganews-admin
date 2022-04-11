@@ -104,6 +104,7 @@ export default function UserList() {
             title: '',
             width: 48,
             fixed: 'left',
+            responsive: ['xs'],
             render(
               avatarUrls: User.Summary['avatarUrls'],
               row
@@ -126,6 +127,7 @@ export default function UserList() {
           {
             dataIndex: 'email',
             title: 'E-mail',
+            responsive: ['md'],
             ellipsis: true, // limita o texto acrescentando ellipsis no final
             width: 160, // Define uma largura para a coluna
             ...getColumnSearchProps('email', 'E-mail'),
@@ -154,6 +156,7 @@ export default function UserList() {
           {
             dataIndex: 'createdAt',
             title: 'Criação',
+            responsive: ['lg'],
             align: 'center',
             width: 120,
             render(createdAt: string) {
