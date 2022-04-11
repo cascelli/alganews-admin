@@ -16,7 +16,7 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 
 const { Sider } = Layout; // Primeiro importa o Layout e depois desconstroi o Sider do Layout
 const { SubMenu } = Menu; // Primeiro importa o Menu e depois desconstroi o SubMenu do Menu
@@ -26,10 +26,10 @@ export default function DefaultLayoutSidebar() {
   const location = useLocation();
 
   // Debug de location
-  useEffect(() => {
-    console.log(location);
-    console.log(location.pathname.split('/'[1]));
-  }, [location]); // Toda vez que mudar a location o hook useEffect é executado
+  // useEffect(() => {
+  // console.log(location);
+  // console.log(location.pathname.split('/'[1]));
+  // }, [location]); // Toda vez que mudar a location o hook useEffect é executado
 
   return (
     <Sider

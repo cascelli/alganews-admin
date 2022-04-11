@@ -8,7 +8,7 @@ import {
   Switch,
   Table,
   Tag,
-  Typography,
+  // Typography,
 } from 'antd';
 import { User } from 'danielbonifacio-sdk';
 import { format, parseISO } from 'date-fns';
@@ -99,6 +99,7 @@ export default function UserList() {
         dataSource={users}
         //pagination={{ pageSize: 2 }}
         pagination={false}
+        rowKey={'id'}
         columns={[
           {
             title: 'Usuários',
