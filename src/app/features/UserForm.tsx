@@ -10,6 +10,8 @@ import {
   Tabs,
 } from 'antd';
 
+import React from 'react';
+
 const { TabPane } = Tabs;
 
 export default function UserForm() {
@@ -109,6 +111,26 @@ export default function UserForm() {
                     <Input placeholder={'0'} />
                   </Form.Item>
                 </Col>
+                {/* alternativa a linha abaixo para uso com muitos elementos repetidos
+                {Array(3).fill(null).map((_, index) => } */}
+                {[1, 2, 3].map((_, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <Col lg={6}>
+                        <Form.Item label={'Habilidade'}>
+                          <Input
+                            placeholder={'E.g.: Javascript'}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col lg={2}>
+                        <Form.Item label={'%'}>
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                    </React.Fragment>
+                  );
+                })}
               </Row>
             </TabPane>
             <TabPane
