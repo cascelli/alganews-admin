@@ -7,7 +7,10 @@ import {
   Input,
   Row,
   Select,
+  Tabs,
 } from 'antd';
+
+const { TabPane } = Tabs;
 
 export default function UserForm() {
   return (
@@ -58,6 +61,63 @@ export default function UserForm() {
               placeholder={'E.g.: contato@joao.silva'}
             ></Input>
           </Form.Item>
+        </Col>
+        <Col lg={24}>
+          <Divider />
+        </Col>
+        <Col lg={24}>
+          <Tabs defaultActiveKey={'personal'} type='card'>
+            <TabPane
+              key={'personal'}
+              tab={'Dados pessoais'}
+            >
+              <Row gutter={24}>
+                <Col lg={8}>
+                  <Form.Item label={'País'}>
+                    <Input placeholder={'E.g: Brasil'} />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item label={'Estado'}>
+                    <Input
+                      placeholder={'E.g: Espírito Santo'}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item label={'Cidade'}>
+                    <Input
+                      placeholder={'E.g: Vila Velha'}
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col lg={8}>
+                  <Form.Item label={'Telefone'}>
+                    <Input
+                      placeholder={'(27) 99999-0000'}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item label={'CPF'}>
+                    <Input placeholder={'111.222.333-44'} />
+                  </Form.Item>
+                </Col>
+                <Col lg={8}>
+                  <Form.Item label={'Preço por palavra'}>
+                    <Input placeholder={'0'} />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane
+              key={'bankAccount'}
+              tab={'Dados bancários'}
+            >
+              Dados bancários
+            </TabPane>
+          </Tabs>
         </Col>
       </Row>
     </Form>
