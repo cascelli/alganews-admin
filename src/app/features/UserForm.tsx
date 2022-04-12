@@ -8,18 +8,47 @@ import {
   Row,
   Select,
   Tabs,
+  Upload,
 } from 'antd';
+import { FileService } from 'danielbonifacio-sdk';
 
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+
+import { UserOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
 
 export default function UserForm() {
+  const [avatar, setAvatar] = useState('');
+
+  const handleAvatarUpload = useCallback(
+    async (file: File) => {
+      const avatarSource = await FileService.upload(file);
+      setAvatar(avatarSource);
+    },
+    []
+  );
+
   return (
     <Form layout={'vertical'}>
       <Row gutter={24} align={'middle'}>
         <Col lg={4}>
-          <Avatar size={128} />
+          <Upload
+            onRemove={() => {
+              setAvatar('');
+            }}
+            beforeUpload={async (file) => {
+              await handleAvatarUpload(file);
+              return false;
+            }}
+          >
+            <Avatar
+              style={{ cursor: 'pointer' }}
+              icon={<UserOutlined />}
+              src={avatar}
+              size={128}
+            />
+          </Upload>
         </Col>
         <Col lg={10}>
           <Form.Item label={'Nome'}>
