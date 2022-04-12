@@ -6,6 +6,7 @@ import {
   Divider,
   Form,
   Input,
+  notification,
   Row,
   Select,
   Tabs,
@@ -16,9 +17,14 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { FileService, User } from 'danielbonifacio-sdk';
+import {
+  FileService,
+  User,
+  UserService,
+} from 'danielbonifacio-sdk';
 import { UserOutlined } from '@ant-design/icons';
 import ImageCrop from 'antd-img-crop';
+import CustomError from 'danielbonifacio-sdk/dist/CustomError';
 
 const { TabPane } = Tabs;
 
@@ -49,7 +55,7 @@ export default function UserForm() {
       form={form}
       layout={'vertical'}
       onFinishFailed={(fields) => {
-        console.log(fields);
+        // console.log(fields);
 
         let bankAccountErrors = 0;
         let personalDataErrors = 0;
@@ -75,10 +81,36 @@ export default function UserForm() {
           setActiveTab('personal');
         }
       }}
-      onFinish={(form: User.Input) => {
-        // if (!form.name)
-        // window.alert('O campo de nome é obrigatório !');
-        console.log(form);
+      onFinish={async (user: User.Input) => {
+        try {
+          // if (!form.name)
+          // window.alert('O campo de nome é obrigatório !');
+          // console.log(form);
+          await UserService.insertNewUser(user);
+          notification.success({
+            message: 'Sucesso',
+            description: 'Usuário criado com sucesso !',
+          });
+        } catch (error) {
+          if (error instanceof CustomError) {
+            if (error.data?.objects) {
+              form.setFields(
+                error.data.objects.map((error) => {
+                  return {
+                    name: error.name?.split(
+                      '.'
+                    ) as string[],
+                    errors: [error.userMessage],
+                  };
+                })
+              );
+            }
+          } else {
+            notification.error({
+              message: 'Houve um erro',
+            });
+          }
+        }
       }}
     >
       <Row gutter={24} align={'middle'}>
@@ -107,7 +139,10 @@ export default function UserForm() {
               />
             </Upload>
           </ImageCrop>
-          <Form.Item name={'avatarUrl'} hidden />
+          <Form.Item name={'avatarUrl'} hidden>
+            {/* Nao pode haver Form.Item sem um Input dentro dele. Declarando um oculto */}
+            <Input hidden />
+          </Form.Item>
         </Col>
         <Col lg={8}>
           <Form.Item
@@ -390,7 +425,7 @@ export default function UserForm() {
                 <Col lg={8}>
                   <Form.Item
                     label={'Conta sem dígito'}
-                    name={['bankAccount', 'accountNumber']}
+                    name={['bankAccount', 'number']}
                     rules={[
                       {
                         required: true,
