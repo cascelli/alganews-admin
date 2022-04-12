@@ -210,6 +210,7 @@ export default function UserForm() {
             <TabPane
               key={'bankAccount'}
               tab={'Dados bancários'}
+              forceRender // Forca a renderizacao da aba oculta
             >
               <Row gutter={24}>
                 <Col lg={8}>
