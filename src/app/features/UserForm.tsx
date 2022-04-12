@@ -11,10 +11,9 @@ import {
   Upload,
 } from 'antd';
 import { FileService } from 'danielbonifacio-sdk';
-
 import React, { useCallback, useState } from 'react';
-
 import { UserOutlined } from '@ant-design/icons';
+import ImageCrop from 'antd-img-crop';
 
 const { TabPane } = Tabs;
 
@@ -33,22 +32,29 @@ export default function UserForm() {
     <Form layout={'vertical'}>
       <Row gutter={24} align={'middle'}>
         <Col lg={4}>
-          <Upload
-            onRemove={() => {
-              setAvatar('');
-            }}
-            beforeUpload={async (file) => {
-              await handleAvatarUpload(file);
-              return false;
-            }}
+          <ImageCrop
+            rotate
+            shape={'round'}
+            grid
+            aspect={1 / 1} // aspect={16 / 9}
           >
-            <Avatar
-              style={{ cursor: 'pointer' }}
-              icon={<UserOutlined />}
-              src={avatar}
-              size={128}
-            />
-          </Upload>
+            <Upload
+              onRemove={() => {
+                setAvatar('');
+              }}
+              beforeUpload={async (file) => {
+                await handleAvatarUpload(file);
+                return false;
+              }}
+            >
+              <Avatar
+                style={{ cursor: 'pointer' }}
+                icon={<UserOutlined />}
+                src={avatar}
+                size={128}
+              />
+            </Upload>
+          </ImageCrop>
         </Col>
         <Col lg={10}>
           <Form.Item label={'Nome'}>
