@@ -97,9 +97,20 @@ export default function UserForm() {
               form.setFields(
                 error.data.objects.map((error) => {
                   return {
-                    name: error.name?.split(
-                      '.'
-                    ) as string[],
+                    name: error.name
+                      ?.split(/(\.|\[|\])/gi)
+                      .filter(
+                        (str) =>
+                          str !== '.' &&
+                          str !== '[' &&
+                          str !== ']' &&
+                          str !== ''
+                      )
+                      .map((str) =>
+                        isNaN(Number(str))
+                          ? str
+                          : Number(str)
+                      ) as string[],
                     errors: [error.userMessage],
                   };
                 })
@@ -292,9 +303,7 @@ export default function UserForm() {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder={'E.g: Vila Velha'}
-                    />
+                    <Input placeholder={'E.g: Vitória'} />
                   </Form.Item>
                 </Col>
 
