@@ -223,16 +223,21 @@ export default function UserForm() {
                 required: true,
                 message: 'O campo é obrigatório',
               },
+              {
+                type: 'enum',
+                enum: ['EDITOR', 'ASSISTANT', 'MANAGER'],
+                message: `O Perfil precisa ser Editor, Assistente ou Gerente`,
+              },
             ]}
           >
             <Select placeholder={'Selecione um perfil'}>
-              <Select.Option value={'Editor'}>
+              <Select.Option value={'EDITOR'}>
                 Editor
               </Select.Option>
-              <Select.Option value={'Assistant'}>
+              <Select.Option value={'ASSISTANT'}>
                 Assistente
               </Select.Option>
-              <Select.Option value={'Manager'}>
+              <Select.Option value={'MANAGER'}>
                 Gerente
               </Select.Option>
             </Select>
