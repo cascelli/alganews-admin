@@ -431,6 +431,21 @@ export default function UserForm() {
                               required: true,
                               message: '',
                             },
+                            {
+                              async validator(
+                                field,
+                                value
+                              ) {
+                                if (isNaN(Number(value)))
+                                  throw 'Apenas números';
+
+                                if (Number(value) > 100)
+                                  throw 'Máx 100';
+
+                                if (Number(value) < 0)
+                                  throw 'Mín 0';
+                              },
+                            },
                           ]}
                         >
                           <Input />
