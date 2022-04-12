@@ -11,14 +11,20 @@ import {
   Tabs,
   Upload,
 } from 'antd';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { FileService, User } from 'danielbonifacio-sdk';
-import React, { useCallback, useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import ImageCrop from 'antd-img-crop';
 
 const { TabPane } = Tabs;
 
 export default function UserForm() {
+  const [form] = Form.useForm<User.Input>();
+
   const [avatar, setAvatar] = useState('');
   const [activeTab, setActiveTab] = useState<
     'personal' | 'bankAccount'
@@ -32,14 +38,21 @@ export default function UserForm() {
     []
   );
 
+  useEffect(() => {
+    form.setFieldsValue({
+      avatarUrl: avatar || undefined,
+    });
+  }, [avatar]);
+
   return (
     <Form
+      form={form}
       layout={'vertical'}
       onFinishFailed={(fields) => {
         console.log(fields);
 
         let bankAccountErrors = 0;
-        let personalDataErrors = 1;
+        let personalDataErrors = 0;
 
         fields.errorFields.forEach(({ name }) => {
           if (name.includes('bankAccount'))
@@ -94,8 +107,9 @@ export default function UserForm() {
               />
             </Upload>
           </ImageCrop>
+          <Form.Item name={'avatarUrl'} hidden />
         </Col>
-        <Col lg={10}>
+        <Col lg={8}>
           <Form.Item
             label={'Nome'}
             name={'name'}
@@ -106,7 +120,7 @@ export default function UserForm() {
               },
             ]}
           >
-            <Input placeholder={'E.g.: João Silva'} />
+            <Input placeholder={'E.g.: João da Silva'} />
           </Form.Item>
           <Form.Item
             label={'Data de nascimento'}
