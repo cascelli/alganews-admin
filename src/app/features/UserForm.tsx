@@ -85,11 +85,23 @@ export default function UserForm() {
         }
       }}
       onFinish={async (user: User.Input) => {
+        // Cria um Objeto de Transferencia de Dados (DTO)
+        const userDTO: User.Input = {
+          // Coloca o user atual
+          ...user,
+          // Modifica as propriedades desejadas
+          // Elimina os "." das mascaras antes de enviar para a API
+          phone: user.phone.replace(/\D/g, ''),
+          taxpayerId: user.taxpayerId.replace(/\D/g, ''),
+        };
         try {
           // if (!form.name)
           // window.alert('O campo de nome é obrigatório !');
           // console.log(form);
-          await UserService.insertNewUser(user);
+          //await UserService.insertNewUser(user);
+          // Usando userDTO para lidar com tratamento
+          // de inputs sem máscara (phone e taxpayerID)
+          await UserService.insertNewUser(userDTO);
           notification.success({
             message: 'Sucesso',
             description: 'Usuário criado com sucesso !',
@@ -382,6 +394,7 @@ export default function UserForm() {
                     <MaskedInput
                       mask={'000.000.000-00'}
                       placeholder={'111.222.333-44'}
+                      /* enviado para o evento onFinish do formulario e trabalhando com DTO
                       onChange={(event) => {
                         form.setFieldsValue({
                           // Remove os pontos da mascara e só devolve
@@ -394,6 +407,7 @@ export default function UserForm() {
                             ),
                         });
                       }}
+                      */
                     />
                   </Form.Item>
                 </Col>
