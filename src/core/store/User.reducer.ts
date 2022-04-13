@@ -5,6 +5,7 @@ import {
   isPending,
   isRejected,
 } from '@reduxjs/toolkit';
+import { notification } from 'antd';
 import { User, UserService } from 'danielbonifacio-sdk';
 
 interface UserState {
@@ -59,8 +60,11 @@ export default createReducer(initialState, (builder) => {
     .addMatcher(success, (state) => {
       state.fetching = false;
     })
-    .addMatcher(error, (state) => {
+    .addMatcher(error, (state, action) => {
       state.fetching = false;
+      notification.error({
+        message: action.error.message,
+      });
     })
     .addMatcher(loading, (state) => {
       state.fetching = true;
