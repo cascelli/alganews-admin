@@ -25,6 +25,8 @@ import {
 import { UserOutlined } from '@ant-design/icons';
 import ImageCrop from 'antd-img-crop';
 import CustomError from 'danielbonifacio-sdk/dist/CustomError';
+import { off } from 'process';
+import MaskedInput from 'antd-mask-input';
 
 const { TabPane } = Tabs;
 
@@ -53,6 +55,7 @@ export default function UserForm() {
   return (
     <Form
       form={form}
+      autoComplete={'off'}
       layout={'vertical'}
       onFinishFailed={(fields) => {
         // console.log(fields);
@@ -355,7 +358,8 @@ export default function UserForm() {
                       },
                     ]}
                   >
-                    <Input
+                    <MaskedInput
+                      mask={'(00) [0]0000-0000'}
                       placeholder={'(27) 99999-0000'}
                     />
                   </Form.Item>
@@ -375,7 +379,22 @@ export default function UserForm() {
                       },
                     ]}
                   >
-                    <Input placeholder={'111.222.333-44'} />
+                    <MaskedInput
+                      mask={'000.000.000-00'}
+                      placeholder={'111.222.333-44'}
+                      onChange={(event) => {
+                        form.setFieldsValue({
+                          // Remove os pontos da mascara e só devolve
+                          // os numerospois a API nao os aceita usando RegEx
+                          // para substituir o ponto com a funcao replace()
+                          taxpayerId:
+                            event.target.value.replace(
+                              /\D/g,
+                              ''
+                            ),
+                        });
+                      }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
