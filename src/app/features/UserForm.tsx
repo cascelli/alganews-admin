@@ -130,6 +130,14 @@ export default function UserForm() {
                   };
                 })
               );
+            } else {
+              notification.error({
+                message: error.message,
+                description:
+                  error.data?.detail === 'Network Error'
+                    ? 'Erro de rede'
+                    : error.data?.detail,
+              });
             }
           } else {
             notification.error({
