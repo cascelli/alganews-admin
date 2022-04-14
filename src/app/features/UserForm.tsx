@@ -42,6 +42,7 @@ type UserFormType = {
 
 interface UserFormProps {
   user?: UserFormType;
+  onUpdate?: (user: User.Input) => any;
 }
 
 export default function UserForm(props: UserFormProps) {
@@ -66,7 +67,7 @@ export default function UserForm(props: UserFormProps) {
     form.setFieldsValue({
       avatarUrl: avatar || undefined,
     });
-  }, [avatar]);
+  }, [avatar, form]);
 
   return (
     <Form
@@ -110,6 +111,11 @@ export default function UserForm(props: UserFormProps) {
           phone: user.phone.replace(/\D/g, ''),
           taxpayerId: user.taxpayerId.replace(/\D/g, ''),
         };
+
+        if (props.user)
+          // verifica se props.user existe para ir para a rotina de atualizacao
+          return props.onUpdate && props.onUpdate(userDTO);
+
         try {
           // if (!form.name)
           // window.alert('O campo de nome é obrigatório !');

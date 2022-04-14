@@ -1,5 +1,5 @@
-import { Skeleton } from 'antd';
-import { User } from 'danielbonifacio-sdk';
+import { notification, Skeleton } from 'antd';
+import { User, UserService } from 'danielbonifacio-sdk';
 import moment from 'moment';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
@@ -25,11 +25,23 @@ export default function UserEditView() {
     []
   );
 
+  function handleUserUpdate(user: User.Input) {
+    // console.log(user)
+    UserService.updateExistingUser(1, user).then(() => {
+      notification.success({
+        message: 'Usuário foi atualizado com sucesso !',
+      });
+    });
+  }
+
   if (!user) return <Skeleton />;
 
   return (
     <>
-      <UserForm user={transformUserData(user)} />
+      <UserForm
+        onUpdate={handleUserUpdate}
+        user={transformUserData(user)}
+      />
     </>
   );
 }
