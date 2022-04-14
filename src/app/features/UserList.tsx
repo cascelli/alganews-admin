@@ -8,6 +8,7 @@ import {
   Switch,
   Table,
   Tag,
+  Tooltip,
   // Typography,
 } from 'antd';
 import { User } from 'danielbonifacio-sdk';
@@ -22,6 +23,7 @@ import {
 // import { toggleUserStatus } from '../../core/store/User.reducer';
 // import { createKeybindingConfig } from '@ant-design/charts';
 import { ColumnProps } from 'antd/lib/table';
+import { Link } from 'react-router-dom';
 // import { configureStore } from '@reduxjs/toolkit';
 
 export default function UserList() {
@@ -251,17 +253,29 @@ export default function UserList() {
             responsive: ['sm'],
             align: 'center',
             width: 100,
-            render() {
+            render(id: number) {
               return (
                 <>
-                  <Button
-                    size='small'
-                    icon={<EyeOutlined />}
-                  />
-                  <Button
-                    size='small'
-                    icon={<EditOutlined />}
-                  />
+                  <Tooltip
+                    title={'Visualizar usuário'}
+                    placement={'left'}
+                  >
+                    <Button
+                      size='small'
+                      icon={<EyeOutlined />}
+                    />
+                  </Tooltip>
+                  <Tooltip
+                    title={'Editar usuário'}
+                    placement={'right'}
+                  >
+                    <Link to={`/usuarios/edicao/${id}`}>
+                      <Button
+                        size='small'
+                        icon={<EditOutlined />}
+                      />
+                    </Link>
+                  </Tooltip>
                 </>
               );
             },
