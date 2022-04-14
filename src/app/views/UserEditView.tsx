@@ -3,15 +3,18 @@ import { User, UserService } from 'danielbonifacio-sdk';
 import moment from 'moment';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
+import { Redirect, useParams } from 'react-router-dom';
 import useUser from '../../core/hooks/useUser';
 import UserForm from '../features/UserForm';
 
 export default function UserEditView() {
+  const params = useParams<{ id: string }>();
   const { user, fetchUser } = useUser();
 
   useEffect(() => {
-    fetchUser(1);
-  }, [fetchUser]);
+    if (!isNaN(Number(params.id)))
+      fetchUser(Number(params.id));
+  }, [fetchUser, params.id]);
 
   const transformUserData = useCallback(
     (user: User.Detailed) => {
@@ -25,9 +28,15 @@ export default function UserEditView() {
     []
   );
 
+  if (isNaN(Number(params.id)))
+    return <Redirect to={'/usuarios'} />;
+
   function handleUserUpdate(user: User.Input) {
     // console.log(user)
-    UserService.updateExistingUser(1, user).then(() => {
+    UserService.updateExistingUser(
+      Number(params.id),
+      user
+    ).then(() => {
       notification.success({
         message: 'Usuário foi atualizado com sucesso !',
       });
