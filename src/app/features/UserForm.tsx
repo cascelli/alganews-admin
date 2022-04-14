@@ -171,47 +171,49 @@ export default function UserForm(props: UserFormProps) {
       initialValues={props.user}
     >
       <Row gutter={24} align={'middle'}>
-        <Col lg={4}>
-          <ImageCrop
-            rotate
-            shape={'round'}
-            grid
-            aspect={1 / 1} // aspect={16 / 9}
-          >
-            <Upload
-              maxCount={1}
-              onRemove={() => {
-                setAvatar('');
-              }}
-              beforeUpload={(file) => {
-                handleAvatarUpload(file);
-                return false;
-              }}
-              fileList={[
-                ...(avatar
-                  ? [
-                      {
-                        name: 'Avatar',
-                        uid: '',
-                      },
-                    ]
-                  : []),
-              ]}
+        <Col xs={24} lg={4}>
+          <Row justify={'center'}>
+            <ImageCrop
+              rotate
+              shape={'round'}
+              grid
+              aspect={1 / 1} // aspect={16 / 9}
             >
-              <Avatar
-                style={{ cursor: 'pointer' }}
-                icon={<UserOutlined />}
-                src={avatar}
-                size={128}
-              />
-            </Upload>
-          </ImageCrop>
-          <Form.Item name={'avatarUrl'} hidden>
-            {/* Nao pode haver Form.Item sem um Input dentro dele. Declarando um oculto */}
-            <Input hidden />
-          </Form.Item>
+              <Upload
+                maxCount={1}
+                onRemove={() => {
+                  setAvatar('');
+                }}
+                beforeUpload={(file) => {
+                  handleAvatarUpload(file);
+                  return false;
+                }}
+                fileList={[
+                  ...(avatar
+                    ? [
+                        {
+                          name: 'Avatar',
+                          uid: '',
+                        },
+                      ]
+                    : []),
+                ]}
+              >
+                <Avatar
+                  style={{ cursor: 'pointer' }}
+                  icon={<UserOutlined />}
+                  src={avatar}
+                  size={128}
+                />
+              </Upload>
+            </ImageCrop>
+            <Form.Item name={'avatarUrl'} hidden>
+              {/* Nao pode haver Form.Item sem um Input dentro dele. Declarando um oculto */}
+              <Input hidden />
+            </Form.Item>
+          </Row>
         </Col>
-        <Col lg={8}>
+        <Col xs={24} lg={8}>
           <Form.Item
             label={'Nome'}
             name={'name'}
@@ -245,7 +247,7 @@ export default function UserForm(props: UserFormProps) {
             />
           </Form.Item>
         </Col>
-        <Col lg={10}>
+        <Col xs={24} lg={12}>
           <Form.Item
             label={'Bio'}
             name={'bio'}
@@ -270,7 +272,7 @@ export default function UserForm(props: UserFormProps) {
         <Col xs={24}>
           <Divider />
         </Col>
-        <Col lg={12}>
+        <Col xs={24} lg={12}>
           <Form.Item
             label={'Perfil'}
             name={'role'}
@@ -299,7 +301,7 @@ export default function UserForm(props: UserFormProps) {
             </Select>
           </Form.Item>
         </Col>
-        <Col lg={12}>
+        <Col xs={24} lg={12}>
           <Form.Item
             label={'Email'}
             name={'email'}
@@ -320,10 +322,10 @@ export default function UserForm(props: UserFormProps) {
             ></Input>
           </Form.Item>
         </Col>
-        <Col lg={24}>
+        <Col sm={24}>
           <Divider />
         </Col>
-        <Col lg={24}>
+        <Col sm={24}>
           <Tabs
             defaultActiveKey={'personal'}
             type='card'
@@ -339,7 +341,7 @@ export default function UserForm(props: UserFormProps) {
               tab={'Dados pessoais'}
             >
               <Row gutter={24}>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'País'}
                     name={['location', 'country']}
@@ -357,7 +359,7 @@ export default function UserForm(props: UserFormProps) {
                     <Input placeholder={'E.g: Brasil'} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Estado'}
                     name={['location', 'state']}
@@ -377,7 +379,7 @@ export default function UserForm(props: UserFormProps) {
                     />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Cidade'}
                     name={['location', 'city']}
@@ -396,7 +398,7 @@ export default function UserForm(props: UserFormProps) {
                   </Form.Item>
                 </Col>
 
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Telefone'}
                     name={'phone'}
@@ -417,7 +419,7 @@ export default function UserForm(props: UserFormProps) {
                     />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'CPF'}
                     name={'taxpayerId'}
@@ -452,7 +454,7 @@ export default function UserForm(props: UserFormProps) {
                     />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Preço por palavra'}
                     name={'pricePerWord'}
@@ -471,7 +473,7 @@ export default function UserForm(props: UserFormProps) {
                 {[1, 2, 3].map((_, index) => {
                   return (
                     <React.Fragment key={index}>
-                      <Col lg={6}>
+                      <Col xs={18} lg={6}>
                         <Form.Item
                           label={'Habilidade'}
                           name={['skills', index, 'name']}
@@ -492,7 +494,7 @@ export default function UserForm(props: UserFormProps) {
                           />
                         </Form.Item>
                       </Col>
-                      <Col lg={2}>
+                      <Col xs={6} lg={2}>
                         <Form.Item
                           label={'%'}
                           name={[
@@ -541,7 +543,7 @@ export default function UserForm(props: UserFormProps) {
               forceRender // Forca a renderizacao da aba oculta
             >
               <Row gutter={24}>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Instituição'}
                     name={['bankAccount', 'bankCode']}
@@ -563,7 +565,7 @@ export default function UserForm(props: UserFormProps) {
                     <Input placeholder={'260'} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Agência'}
                     name={['bankAccount', 'agency']}
@@ -585,7 +587,7 @@ export default function UserForm(props: UserFormProps) {
                     <Input placeholder={'0001'} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Conta sem dígito'}
                     name={['bankAccount', 'number']}
@@ -600,7 +602,7 @@ export default function UserForm(props: UserFormProps) {
                   </Form.Item>
                 </Col>
 
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Dígito'}
                     name={['bankAccount', 'digit']}
@@ -618,7 +620,7 @@ export default function UserForm(props: UserFormProps) {
                     <Input placeholder={'1'} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Tipo de conta'}
                     name={['bankAccount', 'type']}
@@ -647,7 +649,7 @@ export default function UserForm(props: UserFormProps) {
             </TabPane>
           </Tabs>
         </Col>
-        <Col lg={24}>
+        <Col xs={24}>
           <Row justify={'end'}>
             <Button type={'primary'} htmlType={'submit'}>
               {!props.user
