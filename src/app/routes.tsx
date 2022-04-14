@@ -17,6 +17,7 @@ import UserListView from './views/UserList.view';
 import { useEffect } from 'react';
 import CustomError from 'danielbonifacio-sdk/dist/CustomError';
 import { message, notification } from 'antd';
+import UserEditView from './views/UserEditView';
 
 export default function Routes() {
   useEffect(() => {
@@ -55,6 +56,11 @@ export default function Routes() {
         path={'/usuarios/cadastro'}
         exact
         component={UserCreateView}
+      />
+      <Route
+        path={'/usuarios/edicao/:id'}
+        exact
+        component={UserEditView}
       />
       <Route
         path={'/usuarios'}

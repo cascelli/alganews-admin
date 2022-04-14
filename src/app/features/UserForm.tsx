@@ -30,7 +30,13 @@ import MaskedInput from 'antd-mask-input';
 
 const { TabPane } = Tabs;
 
-export default function UserForm() {
+type UserFormType = User.Detailed;
+
+interface UserFormProps {
+  user?: UserFormType;
+}
+
+export default function UserForm(props: UserFormProps) {
   const [form] = Form.useForm<User.Input>();
 
   const [avatar, setAvatar] = useState('');
@@ -146,6 +152,7 @@ export default function UserForm() {
           }
         }
       }}
+      initialValues={props.user}
     >
       <Row gutter={24} align={'middle'}>
         <Col lg={4}>
@@ -195,7 +202,7 @@ export default function UserForm() {
           >
             <Input placeholder={'E.g.: João da Silva'} />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label={'Data de nascimento'}
             name={'birthdate'}
             rules={[
@@ -210,7 +217,7 @@ export default function UserForm() {
               format={'DD/MM/YYYY'}
               allowClear={true}
             />
-          </Form.Item>
+          </Form.Item> */}
         </Col>
         <Col lg={10}>
           <Form.Item
