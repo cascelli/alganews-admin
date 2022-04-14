@@ -5,6 +5,7 @@ import {
   Col,
   Descriptions,
   Divider,
+  Popconfirm,
   Progress,
   Row,
   Skeleton,
@@ -13,6 +14,9 @@ import {
 } from 'antd';
 
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
+import { WarningFilled } from '@ant-design/icons';
+
+import confirm from 'antd/lib/modal/confirm';
 import { useEffect } from 'react';
 import {
   Link,
@@ -24,7 +28,8 @@ import useUser from '../../core/hooks/useUser';
 export default function UserDetailsView() {
   const params = useParams<{ id: string }>();
   const { lg } = useBreakpoint();
-  const { user, fetchUser, notFound } = useUser();
+  const { user, fetchUser, notFound, toggleUserStatus } =
+    useUser();
 
   useEffect(() => {
     if (!isNaN(Number(params.id)))
@@ -72,7 +77,41 @@ export default function UserDetailsView() {
                   Editar perfil
                 </Button>
               </Link>
-              <Button type={'primary'}>Remover</Button>
+              <Popconfirm
+                title={
+                  user.active
+                    ? `Desabilitar ${user.name}`
+                    : `Habilitar ${user.name}`
+                }
+                onConfirm={() => {
+                  confirm({
+                    icon: (
+                      <WarningFilled
+                        style={{ color: '#09f' }}
+                      />
+                    ),
+                    title: `Tem certeza que deseja ${
+                      user.active
+                        ? `Desabilitar ${user.name} ?`
+                        : `Habilitar ${user.name} ?`
+                    }`,
+                    onOk() {
+                      toggleUserStatus(user).then(() => {
+                        fetchUser(Number(params.id));
+                      });
+                    },
+                    content: user.active
+                      ? 'Desabilitar um usuário fará com que ele seja automaticamente desligado da plataforma, podendo causar prejuízos em seus ganhos.'
+                      : 'Habilitar um usuário fará com que ele ganhe acesso a plataforma novamente, possibilitando criação e publicação de posts.',
+                  });
+                }}
+              >
+                <Button type={'primary'}>
+                  {user.active
+                    ? 'Desabilitar'
+                    : 'Habilitar'}
+                </Button>
+              </Popconfirm>
             </Space>
           </Space>
         </Col>
