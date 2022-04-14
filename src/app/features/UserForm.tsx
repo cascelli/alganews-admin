@@ -47,7 +47,9 @@ interface UserFormProps {
 export default function UserForm(props: UserFormProps) {
   const [form] = Form.useForm<User.Input>();
 
-  const [avatar, setAvatar] = useState('');
+  const [avatar, setAvatar] = useState(
+    props.user?.avatarUrls.default || ''
+  );
   const [activeTab, setActiveTab] = useState<
     'personal' | 'bankAccount'
   >('personal');
@@ -179,6 +181,16 @@ export default function UserForm(props: UserFormProps) {
                 handleAvatarUpload(file);
                 return false;
               }}
+              fileList={[
+                ...(avatar
+                  ? [
+                      {
+                        name: 'Avatar',
+                        uid: '',
+                      },
+                    ]
+                  : []),
+              ]}
             >
               <Avatar
                 style={{ cursor: 'pointer' }}
