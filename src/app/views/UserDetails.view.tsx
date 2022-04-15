@@ -32,6 +32,7 @@ import {
 import useUser from '../../core/hooks/useUser';
 import usePosts from '../../core/hooks/usePosts';
 import usePageTitle from '../../core/hooks/usePageTitle';
+import formatPhone from '../../core/utils/formatPhone';
 
 export default function UserDetailsView() {
   usePageTitle('Detalhes do usuário');
@@ -172,7 +173,7 @@ export default function UserDetailsView() {
               {user.location.city}
             </Descriptions.Item>
             <Descriptions.Item label={'Telefone'}>
-              {user.phone}
+              {formatPhone(user.phone)}
             </Descriptions.Item>
           </Descriptions>
         </Col>
