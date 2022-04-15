@@ -66,8 +66,6 @@ type CurrencyInputProps = Omit<
 export default function CurrencyInput(
   props: CurrencyInputProps
 ) {
-  const [inputValue, setInputValue] = useState('R$ 0,00');
-
   const convertValueToBrl = useCallback((value: number) => {
     return value.toLocaleString('pt-br', {
       style: 'currency',
@@ -76,6 +74,12 @@ export default function CurrencyInput(
       minimumFractionDigits: 2,
     });
   }, []);
+
+  const [inputValue, setInputValue] = useState(
+    typeof props.value === 'number'
+      ? convertValueToBrl(props.value)
+      : props.value
+  );
 
   return (
     <input
