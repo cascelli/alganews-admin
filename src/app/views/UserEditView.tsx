@@ -9,6 +9,7 @@ import {
   useParams,
 } from 'react-router-dom';
 import useUser from '../../core/hooks/useUser';
+import NotFoundError from '../components/NotFoundError';
 import UserForm from '../features/UserForm';
 
 export default function UserEditView() {
@@ -36,7 +37,16 @@ export default function UserEditView() {
   if (isNaN(Number(params.id)))
     return <Redirect to={'/usuarios'} />;
 
-  if (notFound) return <Card>Usuário não encontrado</Card>;
+  if (notFound)
+    return (
+      <Card>
+        <NotFoundError
+          title={'Usuário não encontrado'}
+          actionDestination={'/usuarios'}
+          actionTitle={'Voltar para lista de usuários'}
+        />
+      </Card>
+    );
 
   async function handleUserUpdate(user: User.Input) {
     // console.log(user)
