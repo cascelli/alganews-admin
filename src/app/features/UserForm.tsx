@@ -29,6 +29,7 @@ import CustomError from 'danielbonifacio-sdk/dist/CustomError';
 import MaskedInput from 'antd-mask-input';
 import { Moment } from 'moment';
 import { useHistory } from 'react-router-dom';
+import CurrencyInput from '../components/CurrencyInput';
 
 const { TabPane } = Tabs;
 
@@ -478,9 +479,21 @@ export default function UserForm(props: UserFormProps) {
                         required: true,
                         message: 'O campo é obrigatório',
                       },
+                      {
+                        type: 'number',
+                        min: 0.01,
+                        message:
+                          'O valor mínimo é 1 centavo',
+                      },
                     ]}
                   >
-                    <Input placeholder={'0'} />
+                    <CurrencyInput
+                      onChange={(e, value) => {
+                        form.setFieldsValue({
+                          pricePerWord: value,
+                        });
+                      }}
+                    />
                   </Form.Item>
                 </Col>
                 {/* alternativa a linha abaixo para uso com muitos elementos repetidos
