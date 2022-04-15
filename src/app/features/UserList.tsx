@@ -4,6 +4,7 @@ import {
   Card,
   Descriptions,
   Input,
+  Row,
   Space,
   Switch,
   Table,
@@ -18,6 +19,7 @@ import useUsers from '../../core/hooks/useUsers';
 import {
   EyeOutlined,
   EditOutlined,
+  ReloadOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
 // import { toggleUserStatus } from '../../core/store/User.reducer';
@@ -96,6 +98,15 @@ export default function UserList() {
   //return <div>ToDo: User List Component</div>;
   return (
     <>
+      <Row justify='end'>
+        <Button
+          onClick={() => fetchUsers()}
+          loading={fetching}
+          icon={<ReloadOutlined />}
+        >
+          Atualizar
+        </Button>
+      </Row>
       <Table<User.Summary>
         loading={fetching}
         dataSource={users}
