@@ -31,8 +31,10 @@ import {
 } from 'react-router-dom';
 import useUser from '../../core/hooks/useUser';
 import usePosts from '../../core/hooks/usePosts';
+import usePageTitle from '../../core/hooks/usePageTitle';
 
 export default function UserDetailsView() {
+  usePageTitle('Detalhes do usuário');
   const params = useParams<{ id: string }>();
   const { lg } = useBreakpoint();
   const { user, fetchUser, notFound, toggleUserStatus } =
