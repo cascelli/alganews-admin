@@ -12,10 +12,7 @@ import {
 import { Payment } from 'danielbonifacio-sdk';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import {
-  EyeOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
+import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import usePAyments from '../../core/hooks/usePayments';
 import confirm from 'antd/lib/modal/confirm';
 import { Key } from 'antd/lib/table/interface';
@@ -23,12 +20,8 @@ import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePAyments();
-  const [yearMonth, setYearMonth] = useState<
-    string | undefined
-  >();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<
-    Key[]
-  >([]);
+  const [yearMonth, setYearMonth] = useState<string | undefined>();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const { xs } = useBreakpoint();
 
   useEffect(() => {
@@ -54,6 +47,7 @@ export default function PaymentListView() {
           direction={xs ? 'vertical' : 'horizontal'}
         >
           <Popconfirm
+            disabled={selectedRowKeys.length === 0}
             title={
               selectedRowKeys.length === 1
                 ? 'Você deseja aprovar o pagamento selecionado ?'
@@ -64,9 +58,7 @@ export default function PaymentListView() {
                 title: 'Aprovar pagamento',
                 cancelText: 'Cancelar',
                 onOk() {
-                  console.log(
-                    'todo: implement patch payment approval'
-                  );
+                  console.log('todo: implement patch payment approval');
                 },
                 content:
                   'Esta é uma ação irreversível. Ao aprovar um pagamento, ele não poderá ser removido !',
@@ -78,16 +70,14 @@ export default function PaymentListView() {
               type={'primary'}
               disabled={selectedRowKeys.length === 0}
             >
-              Aprovar pagamentos
+              Aprovar agendamentos
             </Button>
           </Popconfirm>
           <DatePicker.MonthPicker
             style={{ width: xs ? '100%' : 240 }}
             format={'MMMM - YYYY'}
             onChange={(date) => {
-              setYearMonth(
-                date ? date?.format('YYYY-MM') : undefined
-              );
+              setYearMonth(date ? date?.format('YYYY-MM') : undefined);
             }}
           />
         </Space>
@@ -99,9 +89,7 @@ export default function PaymentListView() {
           selectedRowKeys,
           onChange: setSelectedRowKeys,
           getCheckboxProps(payment) {
-            return !payment.canBeApproved
-              ? { disabled: true }
-              : {};
+            return !payment.canBeApproved ? { disabled: true } : {};
           },
         }}
         columns={[
@@ -115,9 +103,7 @@ export default function PaymentListView() {
                     {payment.payee.name}
                   </Descriptions.Item>
                   <Descriptions.Item label={'Agendamento'}>
-                    {moment(payment.scheduledTo).format(
-                      'DD/MM/YYYY'
-                    )}
+                    {moment(payment.scheduledTo).format('DD/MM/YYYY')}
                   </Descriptions.Item>
                   <Descriptions.Item label={'Período'}>
                     {(() => {
@@ -131,40 +117,27 @@ export default function PaymentListView() {
                     })()}
                   </Descriptions.Item>
                   <Descriptions.Item label={'Status'}>
-                    <Tag
-                      color={
-                        payment.approvedAt
-                          ? 'green'
-                          : 'warning'
-                      }
-                    >
+                    <Tag color={payment.approvedAt ? 'green' : 'warning'}>
                       {payment.approvedAt
-                        ? `Aprovado em ${moment(
-                            payment.approvedAt
-                          ).format('DD/MM/YYYY')}`
+                        ? `Aprovado em ${moment(payment.approvedAt).format(
+                            'DD/MM/YYYY'
+                          )}`
                         : 'Aguardando aprovação'}
                     </Tag>
                   </Descriptions.Item>
                   <Descriptions.Item label={'Ações'}>
-                    <Tooltip
-                      title={'Detalhar'}
-                      placement={xs ? 'top' : 'left'}
-                    >
-                      <Button
-                        size={'small'}
-                        icon={<EyeOutlined />}
-                      />
+                    <Tooltip title={'Detalhar'} placement={xs ? 'top' : 'left'}>
+                      <Button size={'small'} icon={<EyeOutlined />} />
                     </Tooltip>
                     <Popconfirm
                       title='Remover agendamento?'
+                      disabled={!payment.canBeDeleted}
                       onConfirm={() => {
                         confirm({
                           title: 'Remover agendamento',
                           cancelText: 'Cancelar',
                           onOk() {
-                            console.log(
-                              'todo: implement payment deletion'
-                            );
+                            console.log('todo: implement payment deletion');
                           },
                           content:
                             'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!',
@@ -217,15 +190,9 @@ export default function PaymentListView() {
             align: 'center',
             responsive: ['sm'],
             width: 240,
-            render(
-              period: Payment.Summary['accountingPeriod']
-            ) {
-              const starts = moment(period.startsOn).format(
-                'DD/MM/YYYY'
-              );
-              const ends = moment(period.endsOn).format(
-                'DD/MM/YYYY'
-              );
+            render(period: Payment.Summary['accountingPeriod']) {
+              const starts = moment(period.startsOn).format('DD/MM/YYYY');
+              const ends = moment(period.endsOn).format('DD/MM/YYYY');
               return `${starts} - ${ends}`;
             },
           },
@@ -235,16 +202,12 @@ export default function PaymentListView() {
             align: 'center',
             width: 180,
             responsive: ['sm'],
-            render(
-              approvalDate: Payment.Summary['approvedAt']
-            ) {
+            render(approvalDate: Payment.Summary['approvedAt']) {
               const formattedApprovalDate =
                 moment(approvalDate).format('DD/MM/YYYY');
 
               return (
-                <Tag
-                  color={approvalDate ? 'green' : 'warning'}
-                >
+                <Tag color={approvalDate ? 'green' : 'warning'}>
                   {approvalDate
                     ? `Aprovado em ${formattedApprovalDate}`
                     : 'Aguardando aprovação'}
@@ -260,25 +223,18 @@ export default function PaymentListView() {
             render(id: number, payment) {
               return (
                 <>
-                  <Tooltip
-                    title={'Detalhar'}
-                    placement='left'
-                  >
-                    <Button
-                      size='small'
-                      icon={<EyeOutlined />}
-                    />
+                  <Tooltip title={'Detalhar'} placement='left'>
+                    <Button size='small' icon={<EyeOutlined />} />
                   </Tooltip>
                   <Popconfirm
                     title='Remover agendamento?'
+                    disabled={!payment.canBeDeleted}
                     onConfirm={() => {
                       confirm({
                         title: 'Remover agendamento',
                         cancelText: 'Cancelar',
                         onOk() {
-                          console.log(
-                            'todo: implement payment deletion'
-                          );
+                          console.log('todo: implement payment deletion');
                         },
                         content:
                           'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!',
