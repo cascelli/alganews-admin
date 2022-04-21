@@ -17,6 +17,7 @@ import usePAyments from '../../core/hooks/usePayments';
 import confirm from 'antd/lib/modal/confirm';
 import { Key } from 'antd/lib/table/interface';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
+import DoubleConfirm from '../components/DoubleConfirm';
 
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePAyments();
@@ -46,23 +47,19 @@ export default function PaymentListView() {
           }}
           direction={xs ? 'vertical' : 'horizontal'}
         >
-          <Popconfirm
-            disabled={selectedRowKeys.length === 0}
-            title={
+          <DoubleConfirm
+            popConfirmTitle={
               selectedRowKeys.length === 1
                 ? 'Você deseja aprovar o pagamento selecionado ?'
                 : 'Você deseja aprovar os pagamentos selecionados ?'
             }
+            disabled={selectedRowKeys.length === 0}
+            modalTitle={'Aprovar agendamento'}
+            modalContent={
+              'Esta é uma ação irreversível. Ao aprovar um pagamento, ele não poderá ser removido !'
+            }
             onConfirm={() => {
-              confirm({
-                title: 'Aprovar pagamento',
-                cancelText: 'Cancelar',
-                onOk() {
-                  console.log('todo: implement patch payment approval');
-                },
-                content:
-                  'Esta é uma ação irreversível. Ao aprovar um pagamento, ele não poderá ser removido !',
-              });
+              console.log('todo: implement patch payment approval');
             }}
           >
             <Button
@@ -72,7 +69,7 @@ export default function PaymentListView() {
             >
               Aprovar agendamentos
             </Button>
-          </Popconfirm>
+          </DoubleConfirm>
           <DatePicker.MonthPicker
             style={{ width: xs ? '100%' : 240 }}
             format={'MMMM - YYYY'}
