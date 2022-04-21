@@ -29,6 +29,7 @@ export default function PaymentListView() {
 
   useEffect(() => {
     fetchPayments({
+      scheduledToYearMonth: '2021-05',
       sort: ['scheduledTo', 'desc'],
       page: 0,
     });
