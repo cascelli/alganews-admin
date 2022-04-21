@@ -1,8 +1,19 @@
-import { Table, Tag } from 'antd';
+import {
+  Button,
+  Popconfirm,
+  Table,
+  Tag,
+  Tooltip,
+} from 'antd';
 import { Payment } from 'danielbonifacio-sdk';
 import moment from 'moment';
 import { useEffect } from 'react';
+import {
+  EyeOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
 import usePAyments from '../../core/hooks/usePayments';
+import confirm from 'antd/lib/modal/confirm';
 
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePAyments();
@@ -17,6 +28,7 @@ export default function PaymentListView() {
     <>
       <Table<Payment.Summary>
         dataSource={payments?.content}
+        rowKey='id'
         columns={[
           {
             dataIndex: 'id',
@@ -72,6 +84,57 @@ export default function PaymentListView() {
                     ? `Aprovado em ${formattedApprovalDate}`
                     : 'Aguardando aprovação'}
                 </Tag>
+              );
+            },
+          },
+
+          {
+            dataIndex: 'id',
+            title: 'Ações',
+            render(id: number, payment) {
+              return (
+                <>
+                  <Tooltip
+                    title={'Detalhar'}
+                    placement={'left'}
+                  >
+                    <Button
+                      size='small'
+                      icon={<EyeOutlined />}
+                    />
+                  </Tooltip>
+
+                  <Popconfirm
+                    title={'Remover agendamento ?'}
+                    onConfirm={() => {
+                      confirm({
+                        title: 'Remover agendamento',
+                        onOk() {
+                          console.log(
+                            'todo: implement payment deletion'
+                          );
+                        },
+                        content:
+                          'Esta é uma ação irreversível. Ao remover o agendamento, ele não poderá ser recuperado !',
+                      });
+                    }}
+                  >
+                    <Tooltip
+                      title={
+                        payment.canBeDeleted
+                          ? 'Remover'
+                          : 'Pagamento já aprovado'
+                      }
+                      placement={'left'}
+                    >
+                      <Button
+                        size='small'
+                        icon={<DeleteOutlined />}
+                        disabled={!payment.canBeDeleted}
+                      />
+                    </Tooltip>
+                  </Popconfirm>
+                </>
               );
             },
           },
