@@ -1,5 +1,6 @@
 import {
   Button,
+  DatePicker,
   Popconfirm,
   Row,
   Table,
@@ -19,6 +20,9 @@ import { Key } from 'antd/lib/table/interface';
 
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePAyments();
+  const [yearMonth, setYearMonth] = useState<
+    string | undefined
+  >();
   const [selectedRowKeys, setSelectedRowKeys] = useState<
     Key[]
   >([]);
@@ -29,14 +33,14 @@ export default function PaymentListView() {
 
   useEffect(() => {
     fetchPayments({
-      scheduledToYearMonth: '2021-05',
+      scheduledToYearMonth: yearMonth,
       sort: ['scheduledTo', 'desc'],
       page: 0,
     });
-  }, [fetchPayments]);
+  }, [fetchPayments, yearMonth]);
   return (
     <>
-      <Row>
+      <Row justify={'space-between'}>
         <Popconfirm
           title={
             selectedRowKeys.length === 1
@@ -63,6 +67,15 @@ export default function PaymentListView() {
             Aprovar pagamentos
           </Button>
         </Popconfirm>
+        <DatePicker.MonthPicker
+          style={{ width: 240 }}
+          format={'MMMM - YYYY'}
+          onChange={(date) => {
+            setYearMonth(
+              date ? date?.format('YYYY-MM') : undefined
+            );
+          }}
+        />
       </Row>
       <Table<Payment.Summary>
         dataSource={payments?.content}
