@@ -1,22 +1,31 @@
 import {
   Button,
   Popconfirm,
+  Row,
   Table,
   Tag,
   Tooltip,
 } from 'antd';
 import { Payment } from 'danielbonifacio-sdk';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   EyeOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
 import usePAyments from '../../core/hooks/usePayments';
 import confirm from 'antd/lib/modal/confirm';
+import { Key } from 'antd/lib/table/interface';
 
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePAyments();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<
+    Key[]
+  >([]);
+
+  useEffect(() => {
+    console.log(selectedRowKeys);
+  }, [selectedRowKeys]);
 
   useEffect(() => {
     fetchPayments({
@@ -26,9 +35,46 @@ export default function PaymentListView() {
   }, [fetchPayments]);
   return (
     <>
+      <Row>
+        <Popconfirm
+          title={
+            selectedRowKeys.length === 1
+              ? 'Você deseja aprovar o pagamento selecionado ?'
+              : 'Você deseja aprovar os pagamentos selecionados ?'
+          }
+          onConfirm={() => {
+            confirm({
+              title: 'Aprovar pagamento',
+              onOk() {
+                console.log(
+                  'todo: implement patch payment approval'
+                );
+              },
+              content:
+                'Esta é uma ação irreversível. Ao aprovar um pagamento, ele não poderá ser removido !',
+            });
+          }}
+        >
+          <Button
+            type={'primary'}
+            disabled={selectedRowKeys.length === 0}
+          >
+            Aprovar pagamentos
+          </Button>
+        </Popconfirm>
+      </Row>
       <Table<Payment.Summary>
         dataSource={payments?.content}
         rowKey='id'
+        rowSelection={{
+          selectedRowKeys,
+          onChange: setSelectedRowKeys,
+          getCheckboxProps(payment) {
+            return !payment.canBeApproved
+              ? { disabled: true }
+              : {};
+          },
+        }}
         columns={[
           {
             dataIndex: 'id',
