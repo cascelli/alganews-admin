@@ -50,6 +50,7 @@ export default function PaymentListView() {
           onConfirm={() => {
             confirm({
               title: 'Aprovar pagamento',
+              cancelText: 'Cancelar',
               onOk() {
                 console.log(
                   'todo: implement patch payment approval'
@@ -169,6 +170,7 @@ export default function PaymentListView() {
                     onConfirm={() => {
                       confirm({
                         title: 'Remover agendamento',
+                        cancelText: 'Cancelar',
                         onOk() {
                           console.log(
                             'todo: implement payment deletion'

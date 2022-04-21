@@ -2,6 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { ConfigProvider } from 'antd';
+import ptBR from 'antd/lib/locale/pt_BR';
+import moment from 'moment';
+import 'moment/locale/pt-br';
 //import App from './App'; // Substituido pelo componente Routes
 import reportWebVitals from './reportWebVitals';
 import { store } from './core/store';
@@ -13,16 +17,20 @@ import Routes from './app/routes';
 // import './index.css'; //Renomeado para index.less para aplicar temas
 import './index.less';
 
+moment.locale('pt-br');
+
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <DefaultLayout>
-          {/* <App /> */}
-          <Routes />
-        </DefaultLayout>
-      </BrowserRouter>
-    </Provider>
+    <ConfigProvider locale={ptBR}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <DefaultLayout>
+            {/* <App /> */}
+            <Routes />
+          </DefaultLayout>
+        </BrowserRouter>
+      </Provider>
+    </ConfigProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
