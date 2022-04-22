@@ -11,9 +11,7 @@ interface DefaultLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DefaultLayout(
-  props: DefaultLayoutProps
-) {
+export default function DefaultLayout(props: DefaultLayoutProps) {
   return (
     <Layout>
       <DefaultLayoutHeader />
@@ -21,9 +19,7 @@ export default function DefaultLayout(
         <DefaultLayoutSidebar />
         <Layout style={{ padding: '0 24px 24px' }}>
           <Breadcrumb />
-          <DefaultLayoutContent>
-            {props.children}
-          </DefaultLayoutContent>
+          <DefaultLayoutContent>{props.children}</DefaultLayoutContent>
         </Layout>
       </Layout>
     </Layout>
