@@ -19,6 +19,7 @@ import CustomError from 'danielbonifacio-sdk/dist/CustomError';
 import { message, notification } from 'antd';
 import UserEditView from './views/UserEditView';
 import UserDetailsView from './views/UserDetails.view';
+import PaymentDetailsView from './views/PaymentDetails.view';
 
 export default function Routes() {
   useEffect(() => {
@@ -53,36 +54,17 @@ export default function Routes() {
     // <BrowserRouter> // transferido para src/index.tsx para evitar erro
     <Switch>
       <Route path={'/'} exact component={HomeView} />
-      <Route
-        path={'/usuarios/cadastro'}
-        exact
-        component={UserCreateView}
-      />
-      <Route
-        path={'/usuarios/edicao/:id'}
-        exact
-        component={UserEditView}
-      />
-      <Route
-        path={'/usuarios/:id'}
-        exact
-        component={UserDetailsView}
-      />{' '}
-      <Route
-        path={'/usuarios'}
-        exact
-        component={UserListView}
-      />
-      <Route
-        path={'/pagamentos'}
-        exact
-        component={PaymentListView}
-      />
+      <Route path={'/usuarios/cadastro'} exact component={UserCreateView} />
+      <Route path={'/usuarios/edicao/:id'} exact component={UserEditView} />
+      <Route path={'/usuarios/:id'} exact component={UserDetailsView} />{' '}
+      <Route path={'/usuarios'} exact component={UserListView} />
+      <Route path={'/pagamentos'} exact component={PaymentListView} />
       <Route
         path={'/pagamentos/cadastro'}
         exact
         component={PaymentCreateView}
       />
+      <Route path={'/pagamentos/:id'} exact component={PaymentDetailsView} />
       <Route
         path={'/fluxo-de-caixa/despesas'}
         exact
