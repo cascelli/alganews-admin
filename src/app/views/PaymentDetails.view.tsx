@@ -1,39 +1,40 @@
-import {
-  Card,
-  Descriptions,
-  Divider,
-  Space,
-  Table,
-  Tag,
-  Typography,
-} from 'antd';
+import { Card, Descriptions, Divider, Table, Typography } from 'antd';
 import { Post } from 'danielbonifacio-sdk';
+import moment from 'moment';
+import { useEffect } from 'react';
+import usePayment from '../../core/hooks/usePayment';
+import PaymentHeader from '../features/PaymentHeader';
 
 export default function PaymentDetailsView() {
+  const {
+    fetchPayment,
+    fetchPosts,
+    fetchingPayment,
+    fetchingPosts,
+    payment,
+    posts,
+  } = usePayment();
+
+  useEffect(() => {
+    fetchPosts(2);
+    fetchPayment(2);
+  }, [fetchPosts, fetchPayment]);
+
   return (
     <>
       <Card>
-        <Typography.Title>Pagamento</Typography.Title>
-        <Typography.Text>
-          A base do pagamento é calculada pela quantidade de palavras escritas
-        </Typography.Text>
-        <Divider />
-        <Descriptions column={2}>
-          <Descriptions.Item label={'Editor'}>Editor</Descriptions.Item>
-          <Descriptions.Item label={'Período'}>
-            <Space size={8}>
-              <Tag style={{ margin: 0 }}>20/12/2020</Tag>
-              <span>{'até'}</span>
-              <Tag>30/12/2020</Tag>
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item label={'Ganhos por posts'}>
-            <Tag>{'R$ 12.345,67'}</Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label={'Total'}>
-            <Tag>{'R$ 45.345,67'}</Tag>
-          </Descriptions.Item>
-        </Descriptions>
+        <PaymentHeader
+          editorId={payment?.payee.id}
+          editorName={payment?.payee.name}
+          periodStart={moment(payment?.accountingPeriod.startsOn).format(
+            'DD/MM/YYYY'
+          )}
+          periodEnd={moment(payment?.accountingPeriod.endsOn).format(
+            'DD/MM/YYYY'
+          )}
+          postsEarnings={payment?.earnings.totalAmount}
+          totalEarnings={payment?.grandTotalAmount}
+        />
         <Divider />
         <Typography.Title level={2}>Bônus</Typography.Title>
         <Descriptions bordered size={'small'} column={1}>
