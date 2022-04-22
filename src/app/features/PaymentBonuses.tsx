@@ -1,11 +1,14 @@
-import { Descriptions, Typography } from 'antd';
+import { Descriptions, Skeleton, Typography } from 'antd';
 import { Payment } from 'danielbonifacio-sdk';
 
 interface PaymentBonusesProps {
+  loading?: boolean;
   bonuses?: Payment.Detailed['bonuses'];
 }
 
 export default function PaymentBonuses(props: PaymentBonusesProps) {
+  if (props.loading) return <Skeleton />;
+
   return (
     <>
       <Typography.Title level={2}>Bônus</Typography.Title>

@@ -2,13 +2,18 @@ import { Descriptions, Table, Tooltip } from 'antd';
 import { Payment, Post } from 'danielbonifacio-sdk';
 
 interface PaymentPostsProps {
+  loading?: boolean;
   posts: Payment.PostWithEarnings[];
 }
 
 export default function PaymentPosts(props: PaymentPostsProps) {
+  //if (props.loading) return <Skeleton />;
+  //if (props.loading) return <Skeleton title={false} />;
+
   return (
     <>
       <Table<Post.WithEarnings>
+        loading={props.loading}
         dataSource={props.posts}
         pagination={false}
         rowKey={'id'}
