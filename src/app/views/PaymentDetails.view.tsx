@@ -1,9 +1,10 @@
-import { Card, Descriptions, Divider, Table, Typography } from 'antd';
-import { Post } from 'danielbonifacio-sdk';
+import { Card, Divider } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import usePayment from '../../core/hooks/usePayment';
+import PaymentBonuses from '../features/PaymentBonuses';
 import PaymentHeader from '../features/PaymentHeader';
+import PaymentPosts from '../features/PaymentPosts';
 
 export default function PaymentDetailsView() {
   const {
@@ -36,38 +37,9 @@ export default function PaymentDetailsView() {
           totalEarnings={payment?.grandTotalAmount}
         />
         <Divider />
-        <Typography.Title level={2}>Bônus</Typography.Title>
-        <Descriptions bordered size={'small'} column={1}>
-          <Descriptions.Item label={'1 milhão de views em 1 dia'}>
-            {'R$ 12.345,67'}
-          </Descriptions.Item>
-          <Descriptions.Item label={'1 milhão de views em 1 dia'}>
-            {'R$ 12.345,67'}
-          </Descriptions.Item>
-        </Descriptions>
+        <PaymentBonuses bonuses={payment?.bonuses} />
         <Divider />
-        <Table<Post.WithEarnings>
-          dataSource={[]}
-          columns={[
-            {
-              dataIndex: 'title',
-              title: 'Post',
-              ellipsis: true,
-            },
-            {
-              dataIndex: 'earnings.pricePerWord',
-              title: 'Preço por palavra',
-            },
-            {
-              dataIndex: 'earnings.words',
-              title: 'Palavras no post',
-            },
-            {
-              dataIndex: 'earnings.totalAmount',
-              title: 'Total ganho neste post',
-            },
-          ]}
-        />
+        <PaymentPosts posts={posts} />
       </Card>
     </>
   );
