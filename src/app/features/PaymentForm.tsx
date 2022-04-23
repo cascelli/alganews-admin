@@ -1,5 +1,6 @@
 import { Col, DatePicker, Form, Row, Select } from 'antd';
 import { Payment } from 'danielbonifacio-sdk';
+import moment from 'moment';
 import useUsers from '../../core/hooks/useUsers';
 
 export default function PaymentForm() {
@@ -48,7 +49,16 @@ export default function PaymentForm() {
 
         <Col xs={24} lg={8}>
           <Form.Item label={'Agendamento'}>
-            <DatePicker style={{ width: '100%' }} format={'DD/MM/YYYY'} />
+            <DatePicker
+              disabledDate={(date) => {
+                return (
+                  date.isBefore(moment()) ||
+                  date.isAfter(moment().add(7, 'days'))
+                );
+              }}
+              style={{ width: '100%' }}
+              format={'DD/MM/YYYY'}
+            />
           </Form.Item>
         </Col>
       </Row>
