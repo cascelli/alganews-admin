@@ -11,10 +11,11 @@ import {
   Select,
   Tabs,
 } from 'antd';
+
+import debounce from 'lodash.debounce';
 import { useForm } from 'antd/lib/form/Form';
 import { Payment } from 'danielbonifacio-sdk';
 import moment, { Moment } from 'moment';
-import { Field } from 'rc-field-form';
 import { FieldData } from 'rc-field-form/lib/interface';
 import { useCallback } from 'react';
 import useUsers from '../../core/hooks/useUsers';
@@ -36,11 +37,12 @@ export default function PaymentForm() {
     }
   }, []);
 
+  const debouncedHandleFormChange = debounce(handleFormChange, 1000);
   return (
     <Form<Payment.Input>
       form={form}
       layout={'vertical'}
-      onFieldsChange={handleFormChange}
+      onFieldsChange={debouncedHandleFormChange}
       onFinish={(form) => console.log(form)}
     >
       <Row gutter={24}>
