@@ -90,21 +90,26 @@
   }
 }
 
+/* Usar esta configuracao para controlar detalhes da impressao de páginas a partir do navegador */
 @media print {
+  // Acrescentar esta classe nos elementos que nao desejar imprimir
   .no-print {
     display: none;
   }
 
+  // Define cor preta para todos os elementos a serem impressos
   * {
     color: #000 !important;
     border-color: #ccc !important;
     background-color: #fff !important;
   }
 
+  // Define margem = 0 na impressao
   .ant-layout {
     margin: 0 !important;
   }
 
+  // Define formato paisagem na impressao das páginas
   @page {
     size: landscape;
   }
