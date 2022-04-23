@@ -11,11 +11,7 @@ import {
   FallOutlined,
 } from '@ant-design/icons';
 
-import {
-  Link,
-  useHistory,
-  useLocation,
-} from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 // import { useEffect } from 'react';
 
 const { Sider } = Layout; // Primeiro importa o Layout e depois desconstroi o Sider do Layout
@@ -34,7 +30,7 @@ export default function DefaultLayoutSidebar() {
   return (
     <Sider
       width={200}
-      className='site-layout-background'
+      className='site-layout-background no-print'
       breakpoint='lg'
       collapsedWidth='0'
     >
@@ -69,9 +65,7 @@ export default function DefaultLayoutSidebar() {
           </Menu.Item>
           <Menu.Item
             key='/usuarios/cadastro'
-            onClick={() =>
-              history.push('/usuarios/cadastro')
-            }
+            onClick={() => history.push('/usuarios/cadastro')}
             icon={<PlusCircleOutlined />}
           >
             <Link to={'/usuarios/cadastro'}>Cadastro</Link>
@@ -92,14 +86,10 @@ export default function DefaultLayoutSidebar() {
           </Menu.Item>
           <Menu.Item
             key='/pagamentos/cadastro'
-            onClick={() =>
-              history.push('/pagamentos/cadastro')
-            }
+            onClick={() => history.push('/pagamentos/cadastro')}
             icon={<PlusCircleOutlined />}
           >
-            <Link to={'/pagamentos/cadastro'}>
-              Cadastro
-            </Link>
+            <Link to={'/pagamentos/cadastro'}>Cadastro</Link>
           </Menu.Item>
         </SubMenu>
         <SubMenu
@@ -110,25 +100,17 @@ export default function DefaultLayoutSidebar() {
         >
           <Menu.Item
             key='/fluxo-de-caixa/despesas'
-            onClick={() =>
-              history.push('/fluxo-de-caixa/despesas')
-            }
+            onClick={() => history.push('/fluxo-de-caixa/despesas')}
             icon={<FallOutlined />}
           >
-            <Link to={'/fluxo-de-caixa/despesas'}>
-              Despesa
-            </Link>
+            <Link to={'/fluxo-de-caixa/despesas'}>Despesa</Link>
           </Menu.Item>
           <Menu.Item
             key='/fluxo-de-caixa/receitas'
-            onClick={() =>
-              history.push('/fluxo-de-caixa/receitas')
-            }
+            onClick={() => history.push('/fluxo-de-caixa/receitas')}
             icon={<RiseOutlined />}
           >
-            <Link to={'/fluxo-de-caixa/receitas'}>
-              Receita
-            </Link>
+            <Link to={'/fluxo-de-caixa/receitas'}>Receita</Link>
           </Menu.Item>
         </SubMenu>
       </Menu>

@@ -1,5 +1,5 @@
-import { Card, Divider } from 'antd';
-import { ResourceNotFoundError } from 'danielbonifacio-sdk/dist/errors';
+import { Button, Card, Divider } from 'antd';
+import { PrinterOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -8,8 +8,11 @@ import NotFoundError from '../components/NotFoundError';
 import PaymentBonuses from '../features/PaymentBonuses';
 import PaymentHeader from '../features/PaymentHeader';
 import PaymentPosts from '../features/PaymentPosts';
+import usePageTitle from '../../core/hooks/usePageTitle';
 
 export default function PaymentDetailsView() {
+  usePageTitle('Detalhes do pagamento');
+
   const params = useParams<{ id: string }>();
   const history = useHistory();
 
@@ -18,7 +21,6 @@ export default function PaymentDetailsView() {
     fetchPosts,
     fetchingPayment,
     fetchingPosts,
-    postsNotFound,
     paymentNotFound,
     payment,
     posts,
@@ -45,6 +47,15 @@ export default function PaymentDetailsView() {
 
   return (
     <>
+      <Button
+        style={{ marginBottom: 16 }}
+        type={'primary'}
+        icon={<PrinterOutlined />}
+        onClick={window.print}
+        className='no-print'
+      >
+        Imprimir
+      </Button>
       <Card>
         <PaymentHeader
           loading={fetchingPayment}

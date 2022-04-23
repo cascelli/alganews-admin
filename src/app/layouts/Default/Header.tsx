@@ -5,7 +5,7 @@ const { Header } = Layout; // Primeiro importa o Layout e depois desconstroi o H
 
 export default function DefaultLayoutHeader() {
   return (
-    <Header className='header'>
+    <Header className='header no-print'>
       {/*
       <div className='logo' />
       <Menu
