@@ -10,7 +10,24 @@ export default function PamentForm() {
       <Row gutter={24}>
         <Col xs={24} lg={8}>
           <Form.Item label={'Editor'}>
-            <Select showSearch>
+            <Select
+              showSearch
+              filterOption={(input, option) => {
+                return (
+                  // Feito cast abaixo para evitar erro
+                  // https://stackoverflow.com/questions/60175452/react-select-and-typescript-type-string-is-not-assignable-to-type-valuetype
+                  (option?.children as any)
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0 ||
+                  // Feito cast abaixo para evitar erro
+                  (option?.children as any)
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                );
+              }}
+            >
               {users.map((user) => (
                 <Select.Option key={user.id} value={user.id}>
                   {user.name}
