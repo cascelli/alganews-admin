@@ -1,16 +1,22 @@
-import { Col, DatePicker, Form, Row, Select } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
+import { useForm } from 'antd/lib/form/Form';
 import { Payment } from 'danielbonifacio-sdk';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import useUsers from '../../core/hooks/useUsers';
 
 export default function PaymentForm() {
+  const [form] = useForm();
   const { editors } = useUsers();
 
   return (
-    <Form<Payment.Input> layout={'vertical'}>
+    <Form<Payment.Input>
+      form={form}
+      layout={'vertical'}
+      onFinish={(form) => console.log(form)}
+    >
       <Row gutter={24}>
         <Col xs={24} lg={8}>
-          <Form.Item label={'Editor'}>
+          <Form.Item label={'Editor'} name={['payee', 'id']}>
             <Select
               showSearch
               filterOption={(input, option) => {
@@ -39,16 +45,42 @@ export default function PaymentForm() {
         </Col>
 
         <Col xs={24} lg={8}>
-          <Form.Item label={'Período'}>
+          <Form.Item hidden name={['accountingPeriod', 'startsOn']}>
+            <Input hidden />
+          </Form.Item>
+          <Form.Item hidden name={['accountingPeriod', 'endsOn']}>
+            <Input hidden />
+          </Form.Item>
+
+          <Form.Item label={'Período'} name={'_accountingPeriod'}>
             <DatePicker.RangePicker
               style={{ width: '100%' }}
               format={'DD/MM/YYYY'}
+              onChange={(date) => {
+                //console.log(date);
+                if (date !== null) {
+                  const [startsOn, endsOn] = date as Moment[];
+                  form.setFieldsValue({
+                    accountingPeriod: {
+                      startsOn: startsOn.format('YYYY-MM-DD'),
+                      endsOn: endsOn.format('YYYY-MM-DD'),
+                    },
+                  });
+                } else {
+                  form.setFieldsValue({
+                    accountingPeriod: {
+                      startsOn: undefined,
+                      endsOn: undefined,
+                    },
+                  });
+                }
+              }}
             />
           </Form.Item>
         </Col>
 
         <Col xs={24} lg={8}>
-          <Form.Item label={'Agendamento'}>
+          <Form.Item label={'Agendamento'} name={'scheduledTo'}>
             <DatePicker
               disabledDate={(date) => {
                 return (
@@ -62,6 +94,7 @@ export default function PaymentForm() {
           </Form.Item>
         </Col>
       </Row>
+      <Button htmlType='submit'>Enviar</Button>
     </Form>
   );
 }
