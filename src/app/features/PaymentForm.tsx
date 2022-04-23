@@ -3,11 +3,13 @@ import {
   Button,
   Col,
   DatePicker,
+  Descriptions,
   Divider,
   Form,
   Input,
   Row,
   Select,
+  Tabs,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { Payment } from 'danielbonifacio-sdk';
@@ -106,7 +108,60 @@ export default function PaymentForm() {
         </Col>
         <Divider />
         <Col xs={24} lg={12}>
-          Todo: payment preview
+          <Tabs defaultActiveKey={'payment'}>
+            <Tabs.TabPane tab={'Demonstrativo'} key={'payment'}>
+              <Descriptions
+                labelStyle={{ width: 160 }}
+                bordered
+                size={'small'}
+                column={1}
+              >
+                <Descriptions.Item label={'Editor'}>
+                  Daniel Bonifacio
+                </Descriptions.Item>
+                <Descriptions.Item label={'Período'}>
+                  20/07/2021 à 30/07/2021
+                </Descriptions.Item>
+                <Descriptions.Item label={'Agendamento'}>
+                  05/08/2021
+                </Descriptions.Item>
+                <Descriptions.Item label={'Palavras'}>432</Descriptions.Item>
+                <Descriptions.Item label={'Ganhos'}>
+                  R$ 23.432,00
+                </Descriptions.Item>
+                {[1].map((bonus) => (
+                  <Descriptions.Item label={`Bônus ${bonus}`}>
+                    R$ R$ 15.000,00
+                  </Descriptions.Item>
+                ))}
+                <Descriptions.Item label={'Ganhos'}>
+                  R$ 7.432,00
+                </Descriptions.Item>
+              </Descriptions>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab={'Dados bancários'} key={'bankAccount'}>
+              <Descriptions
+                bordered
+                labelStyle={{ width: 160 }}
+                size={'small'}
+                column={1}
+              >
+                <Descriptions.Item label={'Código do Banco'}>
+                  341
+                </Descriptions.Item>
+                <Descriptions.Item label={'Número da conta'}>
+                  1065160
+                </Descriptions.Item>
+                <Descriptions.Item label={'Dígito da conta'}>
+                  8
+                </Descriptions.Item>
+                <Descriptions.Item label={'Agência'}>0001</Descriptions.Item>
+                <Descriptions.Item label={'Tipo de conta'}>
+                  Conta Corrente
+                </Descriptions.Item>
+              </Descriptions>
+            </Tabs.TabPane>
+          </Tabs>
         </Col>
         <Col xs={24} lg={12}>
           <Form.List name={'bonuses'}>
@@ -175,7 +230,9 @@ export default function PaymentForm() {
           </Form.List>
         </Col>
       </Row>
-      <Button htmlType='submit'>Enviar</Button>
+      <Button type='primary' htmlType='submit'>
+        Enviar
+      </Button>
     </Form>
   );
 }
