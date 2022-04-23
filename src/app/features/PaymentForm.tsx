@@ -2,7 +2,7 @@ import { Col, DatePicker, Form, Row, Select } from 'antd';
 import { Payment } from 'danielbonifacio-sdk';
 import useUsers from '../../core/hooks/useUsers';
 
-export default function PamentForm() {
+export default function PaymentForm() {
   const { users } = useUsers();
 
   return (
