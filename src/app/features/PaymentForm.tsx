@@ -24,6 +24,7 @@ import useUsers from '../../core/hooks/useUsers';
 import CurrencyInput from '../components/CurrencyInput';
 import usePayment from '../../core/hooks/usePayment';
 import transformIntoBrl from '../../core/utils/transformIntoBrl';
+import AskForPaymentPreview from './AskForPaymentPreview';
 
 export default function PaymentForm() {
   const [form] = useForm<Payment.Input>();
@@ -170,7 +171,9 @@ export default function PaymentForm() {
         </Col>
         <Divider />
         <Col xs={24} lg={12}>
-          {!paymentPreview ? null : (
+          {!paymentPreview ? (
+            <AskForPaymentPreview />
+          ) : (
             <Tabs defaultActiveKey={'payment'}>
               <Tabs.TabPane tab={'Demonstrativo'} key={'payment'}>
                 <Descriptions
