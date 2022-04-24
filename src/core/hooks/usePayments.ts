@@ -4,6 +4,16 @@ import { useCallback, useState } from 'react';
 export default function usePayments() {
   const [payments, setPayments] = useState<Payment.Paginated>();
   const [fetchingPayments, setFetchingPayments] = useState(false);
+  const [approvingPaymentsBatch, setApprovingPaymentsBatch] = useState(false);
+
+  const approvePaymentsBatch = useCallback(async (paymentIds: number[]) => {
+    try {
+      setApprovingPaymentsBatch(true);
+      await PaymentService.approvePaymentsBatch(paymentIds);
+    } finally {
+      setApprovingPaymentsBatch(false);
+    }
+  }, []);
 
   const fetchPayments = useCallback(async (query: Payment.Query) => {
     try {
@@ -19,5 +29,7 @@ export default function usePayments() {
     payments,
     fetchPayments,
     fetchingPayments,
+    approvingPaymentsBatch,
+    approvePaymentsBatch,
   };
 }

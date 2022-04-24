@@ -2,6 +2,7 @@ import {
   Button,
   DatePicker,
   Descriptions,
+  notification,
   Popconfirm,
   Row,
   Space,
@@ -22,7 +23,13 @@ import { Link } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
 
 export default function PaymentListView() {
-  const { payments, fetchPayments, fetchingPayments } = usePayments();
+  const {
+    payments,
+    fetchPayments,
+    fetchingPayments,
+    approvePaymentsBatch,
+    approvingPaymentsBatch,
+  } = usePayments();
   const [yearMonth, setYearMonth] = useState<string | undefined>();
   const [page, setPage] = useState(1);
   const [sortingOrder, setSortingOrder] = useState<
@@ -65,8 +72,12 @@ export default function PaymentListView() {
             modalContent={
               'Esta é uma ação irreversível. Ao aprovar um pagamento, ele não poderá ser removido !'
             }
-            onConfirm={() => {
-              console.log('todo: implement patch payment approval');
+            onConfirm={async () => {
+              //console.log('todo: implement patch payment approval');
+              await approvePaymentsBatch(selectedRowKeys as number[]);
+              notification.success({
+                message: 'Os pagamentos selecionados foram aprovados',
+              });
             }}
           >
             <Button
