@@ -7,6 +7,7 @@ import {
   Divider,
   Form,
   Input,
+  notification,
   Row,
   Select,
   Skeleton,
@@ -28,15 +29,19 @@ import transformIntoBrl from '../../core/utils/transformIntoBrl';
 import AskForPaymentPreview from './AskForPaymentPreview';
 import CustomError from 'danielbonifacio-sdk/dist/CustomError';
 import BusinessError from 'danielbonifacio-sdk/dist/errors/Business.error';
+import { useHistory } from 'react-router-dom';
 
 export default function PaymentForm() {
   const [form] = useForm<Payment.Input>();
   const { editors, fetchUsers, fetching } = useUsers();
+  const history = useHistory();
   const {
     fetchingPaymentPreview,
     clearPaymentPreview,
     paymentPreview,
     fetchPaymentPreview,
+    schedulePayment,
+    schedulingPayment,
   } = usePayment();
 
   const [scheduledTo, setscheduledTo] = useState('');
@@ -58,24 +63,27 @@ export default function PaymentForm() {
 
   const getPaymentPreview = useCallback(async () => {
     const { accountingPeriod, bonuses, payee } = form.getFieldsValue();
-    if (payee.id && accountingPeriod.endsOn && accountingPeriod.startsOn) {
-      try {
-        await fetchPaymentPreview({
-          payee,
-          accountingPeriod,
-          bonuses: bonuses || [],
-        });
-        clearPaymentReviewError();
-      } catch (err) {
-        clearPaymentPreview();
-        if (err instanceof BusinessError) {
-          setPaymentPreviewError(err);
+
+    if (payee && accountingPeriod) {
+      if (payee.id && accountingPeriod.endsOn && accountingPeriod.startsOn) {
+        try {
+          await fetchPaymentPreview({
+            payee,
+            accountingPeriod,
+            bonuses: bonuses || [],
+          });
+          clearPaymentReviewError();
+        } catch (err) {
+          clearPaymentPreview();
+          if (err instanceof BusinessError) {
+            setPaymentPreviewError(err);
+          }
+          throw err;
         }
-        throw err;
+      } else {
+        clearPaymentPreview();
+        clearPaymentReviewError();
       }
-    } else {
-      clearPaymentPreview();
-      clearPaymentReviewError();
     }
   }, [form, fetchPaymentPreview, clearPaymentPreview, clearPaymentReviewError]);
 
@@ -101,16 +109,46 @@ export default function PaymentForm() {
 
   const debouncedHandleFormChange = debounce(handleFormChange, 1000);
 
+  const handleFormSubmit = useCallback(
+    async (form: Payment.Input) => {
+      //console.log(form);
+      const paymentDto: Payment.Input = {
+        accountingPeriod: form.accountingPeriod,
+        payee: form.payee,
+        bonuses: form.bonuses || [],
+        scheduledTo: moment(form.scheduledTo).format('YYYY-MM-DD'),
+      };
+
+      await schedulePayment(paymentDto);
+
+      notification.success({
+        message: 'Pagamento agendado com sucesso',
+      });
+
+      history.push('/pagamentos');
+    },
+    [schedulePayment, history]
+  );
+
   return (
     <Form<Payment.Input>
       form={form}
       layout={'vertical'}
       onFieldsChange={debouncedHandleFormChange}
-      onFinish={(form) => console.log(form)}
+      onFinish={handleFormSubmit}
     >
       <Row gutter={24}>
         <Col xs={24} lg={8}>
-          <Form.Item label={'Editor'} name={['payee', 'id']}>
+          <Form.Item
+            label={'Editor'}
+            name={['payee', 'id']}
+            rules={[
+              {
+                required: true,
+                message: 'Campo é obrigatório',
+              },
+            ]}
+          >
             <Select
               showSearch
               loading={fetching}
@@ -150,7 +188,16 @@ export default function PaymentForm() {
             <Input hidden />
           </Form.Item>
 
-          <Form.Item label={'Período'} name={'_accountingPeriod'}>
+          <Form.Item
+            label={'Período'}
+            name={'_accountingPeriod'}
+            rules={[
+              {
+                required: true,
+                message: 'Campo é obrigatório',
+              },
+            ]}
+          >
             <DatePicker.RangePicker
               style={{ width: '100%' }}
               format={'DD/MM/YYYY'}
@@ -178,7 +225,16 @@ export default function PaymentForm() {
         </Col>
 
         <Col xs={24} lg={8}>
-          <Form.Item label={'Agendamento'} name={'scheduledTo'}>
+          <Form.Item
+            label={'Agendamento'}
+            name={'scheduledTo'}
+            rules={[
+              {
+                required: true,
+                message: 'Campo é obrigatório',
+              },
+            ]}
+          >
             <DatePicker
               disabledDate={(date) => {
                 return (
@@ -296,6 +352,12 @@ export default function PaymentForm() {
                             {...field}
                             name={[field.name, 'title']}
                             label={'Descrição'}
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Campo é obrigatório',
+                              },
+                            ]}
                           >
                             <Input placeholder={'E.g.: 1 milhão de views'} />
                           </Form.Item>
@@ -306,6 +368,12 @@ export default function PaymentForm() {
                             {...field}
                             name={[field.name, 'amount']}
                             label={'Valor'}
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Campo é obrigatório',
+                              },
+                            ]}
                           >
                             <CurrencyInput
                               onChange={(a, amount) => {
@@ -350,9 +418,11 @@ export default function PaymentForm() {
           </Form.List>
         </Col>
       </Row>
-      <Button type='primary' htmlType='submit'>
-        Enviar
-      </Button>
+      <Row justify='end'>
+        <Button type='primary' htmlType='submit' loading={schedulingPayment}>
+          Cadastrar agendamento
+        </Button>
+      </Row>
     </Form>
   );
 }
