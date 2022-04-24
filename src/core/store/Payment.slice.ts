@@ -1,14 +1,8 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  isFulfilled,
-  isPending,
-  isRejected,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Key } from 'antd/lib/table/interface';
 import { Payment, PaymentService } from 'danielbonifacio-sdk';
 import { RootState } from '.';
+import getThunkStatus from '../utils/getThunkStatus';
 
 interface PaymentState {
   paginated: Payment.Paginated;
@@ -54,6 +48,15 @@ export const approvePaymentsInBatch = createAsyncThunk(
   }
 );
 
+export const deleteExistingPayment = createAsyncThunk(
+  'payment/deleteExistingPayment',
+  async (paymentId: number, { dispatch }) => {
+    await PaymentService.removeExistingPayment(paymentId);
+    await dispatch(getAllPayments());
+    await dispatch(storeSelectedKeys([]));
+  }
+);
+
 export const setQuery = createAsyncThunk(
   'payment/setQuery',
   async (query: Payment.Query, { dispatch }) => {
@@ -80,9 +83,11 @@ const PaymentSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    const success = isFulfilled(getAllPayments, approvePaymentsInBatch);
-    const error = isRejected(getAllPayments, approvePaymentsInBatch);
-    const loading = isPending(getAllPayments, approvePaymentsInBatch);
+    const { success, error, loading } = getThunkStatus([
+      getAllPayments,
+      approvePaymentsInBatch,
+      deleteExistingPayment,
+    ]);
 
     builder
       .addMatcher(success, (state) => {

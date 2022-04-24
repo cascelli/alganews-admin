@@ -57,6 +57,11 @@ export default function usePayments() {
     [dispatch]
   );
 
+  const deleteExistingPayment = useCallback(
+    (id: number) => dispatch(PaymentActions.deleteExistingPayment(id)),
+    [dispatch]
+  );
+
   const fetchPayments = useCallback(
     () => dispatch(PaymentActions.getAllPayments()),
     [dispatch]
@@ -81,5 +86,6 @@ export default function usePayments() {
     approvePaymentsInBatch,
     setQuery,
     setSelected,
+    deleteExistingPayment,
   };
 }

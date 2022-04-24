@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Space, Tag } from 'antd';
+import { Button, Card, Divider, notification, Space, Tag } from 'antd';
 import { PrinterOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -24,6 +24,7 @@ export default function PaymentDetailsView() {
     fetchingPosts,
     paymentNotFound,
     approvingPayment,
+    approvePayment,
     payment,
     posts,
   } = usePayment();
@@ -72,8 +73,15 @@ export default function PaymentDetailsView() {
             modalContent={
               'Aprovar um agendamento de pagamento gera uma despesa que não pode ser removida do fluxo de caixa. Essa ação não poderá ser desfeita.'
             }
-            onConfirm={() => {
-              console.log('todo: implement payment approval');
+            onConfirm={async () => {
+              //console.log('todo: implement payment approval');
+              if (payment) {
+                await approvePayment(payment.id);
+                fetchPayment(payment.id);
+                notification.success({
+                  message: 'Pagamento aprovado com sucesso',
+                });
+              }
             }}
           >
             <Button
