@@ -18,7 +18,7 @@ import { useForm } from 'antd/lib/form/Form';
 import { Payment } from 'danielbonifacio-sdk';
 import moment, { Moment } from 'moment';
 import { FieldData } from 'rc-field-form/lib/interface';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash.debounce';
 import { InfoCircleFilled } from '@ant-design/icons';
 import useUsers from '../../core/hooks/useUsers';
@@ -31,7 +31,7 @@ import BusinessError from 'danielbonifacio-sdk/dist/errors/Business.error';
 
 export default function PaymentForm() {
   const [form] = useForm<Payment.Input>();
-  const { editors } = useUsers();
+  const { editors, fetchUsers, fetching } = useUsers();
   const {
     fetchingPaymentPreview,
     clearPaymentPreview,
@@ -42,6 +42,10 @@ export default function PaymentForm() {
   const [scheduledTo, setscheduledTo] = useState('');
 
   const [paymentPreviewError, setPaymentPreviewError] = useState<CustomError>();
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const updateScheduleDate = useCallback(() => {
     const { scheduledTo } = form.getFieldsValue();
@@ -109,6 +113,10 @@ export default function PaymentForm() {
           <Form.Item label={'Editor'} name={['payee', 'id']}>
             <Select
               showSearch
+              loading={fetching}
+              placeholder={
+                fetching ? 'Carregando editores...' : 'Selecione um editor'
+              }
               filterOption={(input, option) => {
                 return (
                   // Feito cast abaixo para evitar erro
