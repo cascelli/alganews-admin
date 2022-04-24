@@ -11,7 +11,12 @@ export default function AskForPaymentPreview(props: AskForPaymentPreviewProps) {
   return (
     <Card bordered={false}>
       <Row justify='center' style={{ textAlign: 'center' }}>
-        <img width={240} src={props.error ? confusing : tax} alt={'tax'} />
+        <img
+          width={240}
+          key={props.error ? 'errorImg' : 'img'}
+          src={props.error ? confusing : tax}
+          alt={'tax'}
+        />
         <Typography.Title level={3} style={{ maxWidth: 360 }}>
           {props.error
             ? props.error.message

@@ -9,6 +9,7 @@ import {
   Input,
   Row,
   Select,
+  Skeleton,
   Space,
   Tabs,
   Tooltip,
@@ -184,7 +185,12 @@ export default function PaymentForm() {
         </Col>
         <Divider />
         <Col xs={24} lg={12}>
-          {!paymentPreview ? (
+          {fetchingPaymentPreview ? (
+            <>
+              <Skeleton />
+              <Skeleton title={false} />
+            </>
+          ) : !paymentPreview ? (
             <AskForPaymentPreview error={paymentPreviewError} />
           ) : (
             <Tabs defaultActiveKey={'payment'}>
