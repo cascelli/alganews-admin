@@ -25,6 +25,8 @@ import CurrencyInput from '../components/CurrencyInput';
 import usePayment from '../../core/hooks/usePayment';
 import transformIntoBrl from '../../core/utils/transformIntoBrl';
 import AskForPaymentPreview from './AskForPaymentPreview';
+import CustomError from 'danielbonifacio-sdk/dist/CustomError';
+import BusinessError from 'danielbonifacio-sdk/dist/errors/Business.error';
 
 export default function PaymentForm() {
   const [form] = useForm<Payment.Input>();
@@ -38,10 +40,16 @@ export default function PaymentForm() {
 
   const [scheduledTo, setscheduledTo] = useState('');
 
+  const [paymentPreviewError, setPaymentPreviewError] = useState<CustomError>();
+
   const updateScheduleDate = useCallback(() => {
     const { scheduledTo } = form.getFieldsValue();
     setscheduledTo(scheduledTo);
   }, [form]);
+
+  const clearPaymentReviewError = useCallback(() => {
+    setPaymentPreviewError(undefined);
+  }, []);
 
   const getPaymentPreview = useCallback(async () => {
     const { accountingPeriod, bonuses, payee } = form.getFieldsValue();
@@ -52,14 +60,19 @@ export default function PaymentForm() {
           accountingPeriod,
           bonuses: bonuses || [],
         });
+        clearPaymentReviewError();
       } catch (err) {
         clearPaymentPreview();
+        if (err instanceof BusinessError) {
+          setPaymentPreviewError(err);
+        }
         throw err;
       }
     } else {
       clearPaymentPreview();
+      clearPaymentReviewError();
     }
-  }, [form, fetchPaymentPreview, clearPaymentPreview]);
+  }, [form, fetchPaymentPreview, clearPaymentPreview, clearPaymentReviewError]);
 
   const handleFormChange = useCallback(
     ([field]: FieldData[]) => {
@@ -172,7 +185,7 @@ export default function PaymentForm() {
         <Divider />
         <Col xs={24} lg={12}>
           {!paymentPreview ? (
-            <AskForPaymentPreview />
+            <AskForPaymentPreview error={paymentPreviewError} />
           ) : (
             <Tabs defaultActiveKey={'payment'}>
               <Tabs.TabPane tab={'Demonstrativo'} key={'payment'}>
