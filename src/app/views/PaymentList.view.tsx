@@ -322,8 +322,7 @@ import { useEffect } from 'react';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import usePayments from '../../core/hooks/usePayments';
 import confirm from 'antd/lib/modal/confirm';
-import { useState } from 'react';
-import { Key, SorterResult } from 'antd/lib/table/interface';
+import { SorterResult } from 'antd/lib/table/interface';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 import DoubleConfirm from '../components/DoubleConfirm';
 import { Link } from 'react-router-dom';
@@ -334,12 +333,12 @@ export default function PaymentListView() {
     payments,
     fetching,
     query,
+    selected,
     fetchPayments,
     setQuery,
     approvePaymentsInBatch,
+    setSelected,
   } = usePayments();
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
   useEffect(() => {
     fetchPayments();
@@ -357,17 +356,17 @@ export default function PaymentListView() {
         >
           <DoubleConfirm
             popConfirmTitle={
-              selectedRowKeys.length === 1
+              selected.length === 1
                 ? 'Você deseja aprovar o agendamento selecionado?'
                 : 'Você deseja aprovar os agendamentos selecionados?'
             }
-            disabled={selectedRowKeys.length === 0}
+            disabled={selected.length === 0}
             modalTitle={'Aprovar agendamento'}
             modalContent={
               'Esta é uma ação irreversível. Ao aprovar um agendamento, ele não poderá ser removido!'
             }
             onConfirm={async () => {
-              await approvePaymentsInBatch(selectedRowKeys as number[]);
+              await approvePaymentsInBatch(selected as number[]);
               notification.success({
                 message: 'Os pagamentos selecionados foram aprovados',
               });
@@ -376,7 +375,7 @@ export default function PaymentListView() {
             <Button
               block={xs}
               type={'primary'}
-              disabled={selectedRowKeys.length === 0}
+              disabled={selected.length === 0}
             >
               Aprovar agendamentos
             </Button>
@@ -412,8 +411,8 @@ export default function PaymentListView() {
           pageSize: query.size,
         }}
         rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
+          selectedRowKeys: selected,
+          onChange: setSelected,
           getCheckboxProps(payment) {
             return !payment.canBeApproved ? { disabled: true } : {};
           },
