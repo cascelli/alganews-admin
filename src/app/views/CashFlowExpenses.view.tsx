@@ -72,9 +72,10 @@ export default function CashFlowExpensesView() {
   return (
     <>
       <Modal
+        title={'Gerenciar Categoria'}
         visible={showCategoryModal}
         onCancel={closeCategoryModal}
-        closeIcon={<></>}
+        //closeIcon={<></>}
         //footer={<></>}
         footer={null}
       >
