@@ -4,7 +4,9 @@ import { useEffect } from 'react';
 import { DeleteOutlined } from '@ant-design/icons';
 import useEntriesCategories from '../../core/hooks/useEntriesCategories';
 
-export default function EntryCategoryManager() {
+export default function EntryCategoryManager(props: {
+  type: 'EXPENSE' | 'REVENUE';
+}) {
   const { expenses, fetchCategories, revenues } = useEntriesCategories();
 
   useEffect(() => {
@@ -13,12 +15,13 @@ export default function EntryCategoryManager() {
 
   return (
     <>
-      <Row justify={'space-between'}>
+      <Row justify={'space-between'} style={{ marginBottom: 16 }}>
         <Button>Atualizar categorias</Button>
         <Button>Adicionar categoria</Button>
       </Row>
       <Table<CashFlow.CategorySummary>
-        dataSource={expenses}
+        size={'small'}
+        dataSource={props.type === 'EXPENSE' ? expenses : revenues}
         columns={[
           {
             dataIndex: 'name',

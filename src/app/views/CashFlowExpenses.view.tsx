@@ -75,8 +75,10 @@ export default function CashFlowExpensesView() {
         visible={showCategoryModal}
         onCancel={closeCategoryModal}
         closeIcon={<></>}
+        //footer={<></>}
+        footer={null}
       >
-        <EntryCategoryManager />
+        <EntryCategoryManager type={'EXPENSE'} />
       </Modal>
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
         <DoubleConfirm
