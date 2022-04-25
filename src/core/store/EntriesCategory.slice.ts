@@ -34,6 +34,14 @@ export const getCategories = createAsyncThunk(
   }
 );
 
+export const createCategory = createAsyncThunk(
+  'cash-flow/categories/createCategory',
+  async (category: CashFlow.CategoryInput, { dispatch }) => {
+    await CashFlowService.insertNewCategory(category);
+    await dispatch(getCategories());
+  }
+);
+
 const entriesCategorySlice = createSlice({
   initialState,
   name: 'cash-flow/categories',

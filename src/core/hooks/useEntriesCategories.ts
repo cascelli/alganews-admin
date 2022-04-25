@@ -1,3 +1,4 @@
+import { CashFlow } from 'danielbonifacio-sdk';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
@@ -13,9 +14,16 @@ export default function useEntriesCategories() {
     [dispatch]
   );
 
+  const createCategory = useCallback(
+    (category: CashFlow.CategoryInput) =>
+      dispatch(CategoryActions.createCategory(category)),
+    [dispatch]
+  );
+
   return {
     expenses,
     revenues,
     fetchCategories,
+    createCategory,
   };
 }

@@ -1,4 +1,13 @@
-import { Button, Col, Form, Input, Modal, Row, Table } from 'antd';
+import {
+  Button,
+  Row,
+  Table,
+  Form,
+  Input,
+  Col,
+  notification,
+  Modal,
+} from 'antd';
 import { CashFlow } from 'danielbonifacio-sdk';
 import { useCallback, useEffect, useState } from 'react';
 import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -25,8 +34,16 @@ export default function EntryCategoryManager(props: {
         onCancel={closeCreationModal}
         title={'Adicionar Categoria'}
         footer={null}
+        destroyOnClose
       >
-        <CategoryForm />
+        <CategoryForm
+          onSuccess={() => {
+            closeCreationModal();
+            notification.success({
+              message: 'Categoria cadastrada com sucesso',
+            });
+          }}
+        />
       </Modal>
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
         <Button>Atualizar categorias</Button>
@@ -68,9 +85,25 @@ export default function EntryCategoryManager(props: {
   );
 }
 
-function CategoryForm() {
+function CategoryForm(props: { onSuccess: () => any }) {
+  const { onSuccess } = props;
+  const { createCategory } = useEntriesCategories();
+
+  const handleFormSubmit = useCallback(
+    async (form: CashFlow.CategoryInput) => {
+      const newCategoryDTO: CashFlow.CategoryInput = {
+        ...form,
+        type: 'EXPENSE',
+      };
+
+      await createCategory(newCategoryDTO);
+      onSuccess();
+    },
+    [createCategory, onSuccess]
+  );
+
   return (
-    <Form layout={'vertical'}>
+    <Form layout={'vertical'} onFinish={handleFormSubmit}>
       <Row justify={'end'}>
         <Col xs={24}>
           <Form.Item
