@@ -26,7 +26,7 @@ const initialState: ExpenseState = {
 export const getExpenses = createAsyncThunk(
   'cash-flow/expenses/getExpenses',
   async (_, { getState, dispatch }) => {
-    const { query } = (getState() as RootState).expense;
+    const { query } = (getState() as RootState).cashFlow.expense;
     const expenses = await CashFlowService.getAllEntries(query);
     await dispatch(storeList(expenses));
   }
@@ -36,6 +36,14 @@ export const removeEntriesInBatch = createAsyncThunk(
   'cash-flow/expenses/removeEntriesInBatch',
   async (ids: number[], { dispatch }) => {
     await CashFlowService.removeEntriesBatch(ids);
+    await dispatch(getExpenses());
+  }
+);
+
+export const setQuery = createAsyncThunk(
+  'cash-flow/expenses/setQuery',
+  async (query: Partial<CashFlow.Query>, { dispatch }) => {
+    await dispatch(_setQuery(query));
     await dispatch(getExpenses());
   }
 );
@@ -51,7 +59,6 @@ const expenseSlice = createSlice({
       state.selected = action.payload;
     },
     setQuery(state, action: PayloadAction<Partial<CashFlow.Query>>) {
-      //Partial define como opcionais os parâetros da Query a serem passados
       state.query = {
         ...state.query,
         ...action.payload,
@@ -66,6 +73,7 @@ const expenseSlice = createSlice({
       getExpenses,
       removeEntriesInBatch,
     ]);
+
     builder
       .addMatcher(error, (state) => {
         state.fetching = false;
@@ -79,8 +87,12 @@ const expenseSlice = createSlice({
   },
 });
 
-export const { storeList, setSelectedExpenses, setQuery, setFetching } =
-  expenseSlice.actions;
+export const {
+  storeList,
+  setSelectedExpenses,
+  setQuery: _setQuery,
+  setFetching,
+} = expenseSlice.actions;
 
 const expenseReducer = expenseSlice.reducer;
 export default expenseReducer;
