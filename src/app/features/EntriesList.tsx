@@ -1,4 +1,4 @@
-import { Button, Space, Table, Tag } from 'antd';
+import { Button, Card, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
 import { CashFlow } from 'danielbonifacio-sdk';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -7,17 +7,16 @@ import transformIntoBrl from '../../core/utils/transformIntoBrl';
 import { DeleteOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
 
 export default function EntriesList() {
-  const { entries, fetchingEntries, fetchEntries } = useCashFlow();
+  const { entries, fetchingEntries, fetchEntries, setQuery, query } =
+    useCashFlow('EXPENSE');
 
   useEffect(() => {
-    fetchEntries({
-      type: 'EXPENSE',
-      sort: ['transactedOn', 'desc'],
-      yearMonth: moment().format('YYYY-MM'),
-    });
+    fetchEntries();
   }, [fetchEntries]);
+
   return (
     <Table<CashFlow.EntrySummary>
+      loading={fetchingEntries}
       dataSource={entries}
       columns={[
         {
@@ -25,6 +24,9 @@ export default function EntriesList() {
           title: 'Descrição',
           width: 300,
           ellipsis: true,
+          render(description: CashFlow.EntrySummary['description']) {
+            return <Tooltip title={description}>{description}</Tooltip>;
+          },
         },
 
         {
@@ -40,6 +42,23 @@ export default function EntriesList() {
           dataIndex: 'transactedOn',
           title: 'Data',
           align: 'center',
+          filterDropdown() {
+            return (
+              <Card>
+                <DatePicker.MonthPicker
+                  format={'YYYY - MMMM'}
+                  allowClear={false}
+                  onChange={(date) => {
+                    setQuery({
+                      ...query,
+                      yearMonth:
+                        date?.format('YYYY-MM') || moment().format('YYYY-MM'),
+                    });
+                  }}
+                />
+              </Card>
+            );
+          },
           render(transactedOn: CashFlow.EntrySummary['transactedOn']) {
             return moment(transactedOn).format('DD/MM/YYYY');
           },
