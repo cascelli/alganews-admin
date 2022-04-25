@@ -5,8 +5,14 @@ import { useEffect } from 'react';
 import useCashFlow from '../../core/hooks/useCashFlow';
 import transformIntoBrl from '../../core/utils/transformIntoBrl';
 import { DeleteOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
+import { Key } from 'antd/lib/table/interface';
 
-export default function EntriesList() {
+interface EntriesListProps {
+  selected?: Key[];
+  onSelect: (Keys: Key[]) => any;
+}
+
+export default function EntriesList(props: EntriesListProps) {
   const { entries, fetchingEntries, fetchEntries, setQuery, query } =
     useCashFlow('EXPENSE');
 
@@ -17,6 +23,15 @@ export default function EntriesList() {
   return (
     <Table<CashFlow.EntrySummary>
       loading={fetchingEntries}
+      rowKey={'id'}
+      rowSelection={{
+        selectedRowKeys: props.selected,
+        onChange: props.onSelect,
+        getCheckboxProps(record) {
+          //return record.systemGenerated ? { disabled: true } : {};
+          return !record.canBeDeleted ? { disabled: true } : {};
+        },
+      }}
       dataSource={entries}
       columns={[
         {

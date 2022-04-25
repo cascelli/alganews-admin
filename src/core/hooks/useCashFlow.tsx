@@ -1,3 +1,4 @@
+import { Key } from 'antd/lib/table/interface';
 import { CashFlow, CashFlowService } from 'danielbonifacio-sdk';
 import moment from 'moment';
 import { useCallback, useState } from 'react';
@@ -6,6 +7,7 @@ type CashFlowEntryType = CashFlow.EntrySummary['type'];
 
 export default function useCashFlow(type: CashFlowEntryType) {
   const [entries, setEntries] = useState<CashFlow.EntrySummary[]>([]);
+  const [selected, setSelected] = useState<Key[]>([]);
   const [query, setQuery] = useState<CashFlow.Query>({
     type,
     sort: ['transactedOn', 'desc'],
@@ -28,7 +30,9 @@ export default function useCashFlow(type: CashFlowEntryType) {
     entries,
     fetchingEntries,
     query,
+    selected,
     fetchEntries,
     setQuery,
+    setSelected,
   };
 }
