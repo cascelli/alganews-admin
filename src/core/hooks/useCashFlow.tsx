@@ -26,6 +26,14 @@ export default function useCashFlow(type: CashFlowEntryType) {
     }
   }, [query]);
 
+  const deleteEntriesInBatch = useCallback(async (ids: number[]) => {
+    try {
+      setFetchingEntries(true);
+      await CashFlowService.removeEntriesBatch(ids);
+    } finally {
+      setFetchingEntries(false);
+    }
+  }, []);
   return {
     entries,
     fetchingEntries,
@@ -34,5 +42,6 @@ export default function useCashFlow(type: CashFlowEntryType) {
     fetchEntries,
     setQuery,
     setSelected,
+    deleteEntriesInBatch,
   };
 }
