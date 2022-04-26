@@ -53,14 +53,14 @@ import { Key } from 'antd/lib/table/interface';
 import { CashFlow } from 'danielbonifacio-sdk';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { AppDispatch, RootState } from '../store';
 import * as ExpensesActions from '../store/Expense.slice';
 import * as RevenuesActions from '../store/Revenue.slice';
 
 type CashFlowEntryType = CashFlow.EntrySummary['type'];
 
 export default function useCashFlow(type: CashFlowEntryType) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const query = useSelector((s: RootState) =>
     type === 'EXPENSE' ? s.cashFlow.expense.query : s.cashFlow.revenue.query
@@ -86,6 +86,16 @@ export default function useCashFlow(type: CashFlowEntryType) {
           ? ExpensesActions.getExpenses()
           : RevenuesActions.getRevenues()
       ),
+    [dispatch, type]
+  );
+
+  const createEntry = useCallback(
+    (entry: CashFlow.EntryInput) =>
+      dispatch(
+        type === 'EXPENSE'
+          ? ExpensesActions.createExpense(entry)
+          : RevenuesActions.createRevenue(entry)
+      ).unwrap(),
     [dispatch, type]
   );
 
@@ -128,5 +138,6 @@ export default function useCashFlow(type: CashFlowEntryType) {
     removeEntries,
     setQuery,
     setSelected,
+    createEntry,
   };
 }

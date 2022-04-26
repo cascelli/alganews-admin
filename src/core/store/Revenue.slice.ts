@@ -32,6 +32,14 @@ export const getRevenues = createAsyncThunk(
   }
 );
 
+export const createRevenue = createAsyncThunk(
+  'cash-flow/revenues/createRevenue',
+  async (revenue: CashFlow.EntryInput, { dispatch }) => {
+    await CashFlowService.insertNewEntry(revenue);
+    await dispatch(getRevenues());
+  }
+);
+
 export const removeEntriesInBatch = createAsyncThunk(
   'cash-flow/revenues/removeEntriesInBatch',
   async (ids: number[], { dispatch }) => {
@@ -72,6 +80,7 @@ const revenueSlice = createSlice({
     const { error, loading, success } = getThunkStatus([
       getRevenues,
       removeEntriesInBatch,
+      createRevenue,
     ]);
 
     builder

@@ -17,7 +17,7 @@ const initialState: ExpenseState = {
   fetching: false,
   query: {
     type: 'EXPENSE',
-    sort: ['transactedOn', 'desc'],
+    sort: ['id', 'desc'],
     yearMonth: moment().format('YYYY-MM'),
   },
   selected: [],
@@ -32,6 +32,13 @@ export const getExpenses = createAsyncThunk(
   }
 );
 
+export const createExpense = createAsyncThunk(
+  'cash-flow/expenses/createExpense',
+  async (expense: CashFlow.EntryInput, { dispatch }) => {
+    await CashFlowService.insertNewEntry(expense);
+    await dispatch(getExpenses());
+  }
+);
 export const removeEntriesInBatch = createAsyncThunk(
   'cash-flow/expenses/removeEntriesInBatch',
   async (ids: number[], { dispatch }) => {
@@ -72,6 +79,7 @@ const expenseSlice = createSlice({
     const { error, loading, success } = getThunkStatus([
       getExpenses,
       removeEntriesInBatch,
+      createExpense,
     ]);
 
     builder

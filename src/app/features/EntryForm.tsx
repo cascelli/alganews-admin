@@ -15,6 +15,7 @@ import CurrencyInput from '../components/CurrencyInput';
 import { Moment } from 'moment';
 import { useForm } from 'antd/lib/form/Form';
 import useEntriesCategories from '../../core/hooks/useEntriesCategories';
+import useCashFlow from '../../core/hooks/useCashFlow';
 
 type EntryFormSubmit = Omit<CashFlow.EntryInput, 'transactedOn'> & {
   transactedOn: Moment;
@@ -22,14 +23,16 @@ type EntryFormSubmit = Omit<CashFlow.EntryInput, 'transactedOn'> & {
 
 interface EntryFormProps {
   type: 'EXPENSE' | 'REVENUE';
+  onSuccess: () => any;
 }
 
-export default function EntryForm({ type }: EntryFormProps) {
+export default function EntryForm({ type, onSuccess }: EntryFormProps) {
   // Desestruturou props para pegar o type
   const [form] = useForm();
   const { revenues, expenses, fetching, fetchCategories } =
     useEntriesCategories();
 
+  const { createEntry, fetching: fetchingEntries } = useCashFlow(type);
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
@@ -40,17 +43,19 @@ export default function EntryForm({ type }: EntryFormProps) {
   );
 
   const handleFormSubmit = useCallback(
-    (form: EntryFormSubmit) => {
+    async (form: EntryFormSubmit) => {
       //console.log(form);
       const newEntryDTO: CashFlow.EntryInput = {
         ...form,
-        transactedOn: form.transactedOn.format('DD/MM/YYYY'),
+        transactedOn: form.transactedOn.format('YYY-MM-DD'),
         type,
       };
 
-      console.log(newEntryDTO);
+      //console.log(newEntryDTO);
+      await createEntry(newEntryDTO);
+      onSuccess();
     },
-    [type]
+    [type, createEntry, onSuccess]
   );
 
   return (
@@ -117,7 +122,11 @@ export default function EntryForm({ type }: EntryFormProps) {
       <Row justify={'end'}>
         <Space>
           <Button>Cancelar</Button>
-          <Button type={'primary'} htmlType={'submit'}>
+          <Button
+            loading={fetchingEntries}
+            type={'primary'}
+            htmlType={'submit'}
+          >
             Cadastrar despesa
           </Button>
         </Space>

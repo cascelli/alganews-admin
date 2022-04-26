@@ -51,7 +51,16 @@ export default function CashFlowExpensesView() {
 */
 
 /* === Impelmentação com Flux / Redux === */
-import { Button, Divider, Modal, Row, Space, Tooltip, Typography } from 'antd';
+import {
+  Button,
+  Divider,
+  Modal,
+  notification,
+  Row,
+  Space,
+  Tooltip,
+  Typography,
+} from 'antd';
 import {
   InfoCircleFilled,
   TagOutlined,
@@ -99,7 +108,15 @@ export default function CashFlowExpensesView() {
         footer={null}
         destroyOnClose
       >
-        <EntryForm type={'EXPENSE'} />
+        <EntryForm
+          type={'EXPENSE'}
+          onSuccess={() => {
+            closeFormModal();
+            notification.success({
+              message: 'Entrada cadastrada com sucesso !',
+            });
+          }}
+        />
       </Modal>
 
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
