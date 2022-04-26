@@ -32,6 +32,24 @@ export const getRevenues = createAsyncThunk(
   }
 );
 
+export const updateRevenue = createAsyncThunk(
+  'cash-flow/expenses/updateRevenue',
+  async (
+    { entry, entryId }: { entry: CashFlow.EntryInput; entryId: number },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      await CashFlowService.updateExistingEntry(entryId, entry);
+      await dispatch(getRevenues());
+    } catch (err) {
+      //return rejectWithValue({ ...err });
+      // Correcao de erro devida a versao do typescript mais recente que o do curso :
+      //if (err instanceof CustomError) return rejectWithValue({ ...err });
+      if (typeof err === 'object') return rejectWithValue({ ...err });
+    }
+  }
+);
+
 export const createRevenue = createAsyncThunk(
   'cash-flow/revenues/createRevenue',
   async (revenue: CashFlow.EntryInput, { dispatch, rejectWithValue }) => {
@@ -88,6 +106,7 @@ const revenueSlice = createSlice({
       getRevenues,
       removeEntriesInBatch,
       createRevenue,
+      updateRevenue,
     ]);
 
     builder

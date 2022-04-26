@@ -11,13 +11,12 @@ import {
   Skeleton,
 } from 'antd';
 import { CashFlow, CashFlowService } from 'danielbonifacio-sdk';
-import { useCallback, useState } from 'react';
 import moment, { Moment } from 'moment';
-import CurrencyInput from '../components/CurrencyInput';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useForm } from 'antd/lib/form/Form';
+
+import CurrencyInput from '../components/CurrencyInput';
 import useEntriesCategories from '../../core/hooks/useEntriesCategories';
-import { useEffect } from 'react';
-import { useMemo } from 'react';
 import useCashFlow from '../../core/hooks/useCashFlow';
 
 type EntryFormSubmit = Omit<CashFlow.EntryInput, 'transactedOn'> & {
@@ -41,7 +40,11 @@ export default function EntryForm({
   const { revenues, expenses, fetching, fetchCategories } =
     useEntriesCategories();
 
-  const { createEntry, fetching: fetchingEntries } = useCashFlow(type);
+  const {
+    createEntry,
+    fetching: fetchingEntries,
+    updateEntry,
+  } = useCashFlow(type);
 
   useEffect(() => {
     fetchCategories();
@@ -73,10 +76,13 @@ export default function EntryForm({
         type,
       };
 
-      await createEntry(newEntryDTO);
+      editingEntry
+        ? await updateEntry(editingEntry, newEntryDTO)
+        : await createEntry(newEntryDTO);
+
       onSuccess();
     },
-    [type, createEntry, onSuccess]
+    [type, createEntry, onSuccess, updateEntry, editingEntry]
   );
 
   return loading ? (
@@ -159,7 +165,7 @@ export default function EntryForm({
             type={'primary'}
             htmlType={'submit'}
           >
-            Cadastrar despesa
+            {editingEntry ? 'Atualizar' : 'Cadastrar'} despesa
           </Button>
         </Space>
       </Row>
