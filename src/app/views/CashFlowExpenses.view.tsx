@@ -99,7 +99,7 @@ export default function CashFlowExpensesView() {
         footer={null}
         destroyOnClose
       >
-        <EntryForm />
+        <EntryForm type={'EXPENSE'} />
       </Modal>
 
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
