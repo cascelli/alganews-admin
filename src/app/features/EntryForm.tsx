@@ -1,20 +1,22 @@
 import {
-  Button,
   Col,
-  DatePicker,
-  Divider,
+  Row,
   Form,
   Input,
-  Row,
-  Select,
+  DatePicker,
+  Divider,
   Space,
+  Button,
+  Select,
 } from 'antd';
 import { CashFlow } from 'danielbonifacio-sdk';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback } from 'react';
+import moment, { Moment } from 'moment';
 import CurrencyInput from '../components/CurrencyInput';
-import { Moment } from 'moment';
 import { useForm } from 'antd/lib/form/Form';
 import useEntriesCategories from '../../core/hooks/useEntriesCategories';
+import { useEffect } from 'react';
+import { useMemo } from 'react';
 import useCashFlow from '../../core/hooks/useCashFlow';
 
 type EntryFormSubmit = Omit<CashFlow.EntryInput, 'transactedOn'> & {
@@ -27,12 +29,12 @@ interface EntryFormProps {
 }
 
 export default function EntryForm({ type, onSuccess }: EntryFormProps) {
-  // Desestruturou props para pegar o type
   const [form] = useForm();
   const { revenues, expenses, fetching, fetchCategories } =
     useEntriesCategories();
 
   const { createEntry, fetching: fetchingEntries } = useCashFlow(type);
+
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
@@ -44,14 +46,12 @@ export default function EntryForm({ type, onSuccess }: EntryFormProps) {
 
   const handleFormSubmit = useCallback(
     async (form: EntryFormSubmit) => {
-      //console.log(form);
       const newEntryDTO: CashFlow.EntryInput = {
         ...form,
-        transactedOn: form.transactedOn.format('YYY-MM-DD'),
+        transactedOn: form.transactedOn.format('YYYY-MM-DD'),
         type,
       };
 
-      //console.log(newEntryDTO);
       await createEntry(newEntryDTO);
       onSuccess();
     },
@@ -70,33 +70,31 @@ export default function EntryForm({ type, onSuccess }: EntryFormProps) {
           <Form.Item
             label={'Descrição'}
             name={'description'}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[{ required: true, message: 'Campo obrigatório' }]}
           >
-            <Input placeholder={'Pagamento AWS'} />
+            <Input placeholder={'Pagamento da AWS'} />
           </Form.Item>
         </Col>
         <Col xs={24}>
           <Form.Item
             label={'Categoria'}
             name={['category', 'id']}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[{ required: true, message: 'Campo obrigatório' }]}
           >
             <Select loading={fetching} placeholder={'Selecione uma categoria'}>
               {categories.map((category) => (
                 <Select.Option key={category.id} value={category.id}>
-                  {' '}
                   {category.name}
                 </Select.Option>
               ))}
             </Select>
           </Form.Item>
         </Col>
-
         <Col xs={24} lg={12}>
           <Form.Item
             label={'Montante'}
             name={'amount'}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[{ required: true, message: 'Campo obrigatório' }]}
           >
             <CurrencyInput
               defaultValue={'R$ 0,00'}
@@ -112,9 +110,15 @@ export default function EntryForm({ type, onSuccess }: EntryFormProps) {
           <Form.Item
             label={'Data de entrada'}
             name={'transactedOn'}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[{ required: true, message: 'Campo obrigatório' }]}
           >
-            <DatePicker format={'DD/MM/YYYY'} style={{ width: '100%' }} />
+            <DatePicker
+              format={'DD/MM/YYYY'}
+              style={{ width: '100%' }}
+              disabledDate={(date) => {
+                return date.isAfter(moment());
+              }}
+            />
           </Form.Item>
         </Col>
       </Row>

@@ -34,9 +34,16 @@ export const getRevenues = createAsyncThunk(
 
 export const createRevenue = createAsyncThunk(
   'cash-flow/revenues/createRevenue',
-  async (revenue: CashFlow.EntryInput, { dispatch }) => {
-    await CashFlowService.insertNewEntry(revenue);
-    await dispatch(getRevenues());
+  async (revenue: CashFlow.EntryInput, { dispatch, rejectWithValue }) => {
+    try {
+      await CashFlowService.insertNewEntry(revenue);
+      await dispatch(getRevenues());
+    } catch (err) {
+      //return rejectWithValue({ ...err });
+      // Correcao de erro devida a versao do typescript mais recente que o do curso :
+      //if (err instanceof CustomError) return rejectWithValue({ ...err });
+      if (typeof err === 'object') return rejectWithValue({ ...err });
+    }
   }
 );
 

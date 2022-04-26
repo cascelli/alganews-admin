@@ -42,8 +42,6 @@ export const store = configureStore({
   reducer: {
     user: UserReducer,
     payment: PaymentReducer,
-    // expense: expenseReducer,
-    // revenue: revenueReducer,
     cashFlow: cashFlowReducer,
   },
   middleware: function (getDefaultMiddlewares) {
