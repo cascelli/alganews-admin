@@ -34,9 +34,16 @@ export const getExpenses = createAsyncThunk(
 
 export const createExpense = createAsyncThunk(
   'cash-flow/expenses/createExpense',
-  async (expense: CashFlow.EntryInput, { dispatch }) => {
-    await CashFlowService.insertNewEntry(expense);
-    await dispatch(getExpenses());
+  async (expense: CashFlow.EntryInput, { dispatch, rejectWithValue }) => {
+    try {
+      await CashFlowService.insertNewEntry(expense);
+      await dispatch(getExpenses());
+    } catch (err) {
+      //return rejectWithValue({ ...err });
+      // Correcao de erro devida a versao do typescript mais recente que o do curso :
+      //if (err instanceof CustomError) return rejectWithValue({ ...err });
+      if (typeof err === 'object') return rejectWithValue({ ...err });
+    }
   }
 );
 export const removeEntriesInBatch = createAsyncThunk(
