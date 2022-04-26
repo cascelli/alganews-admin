@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CashFlow, CashFlowService } from 'danielbonifacio-sdk';
+import getThunkStatus from '../utils/getThunkStatus';
 
 interface EntriesCategoryState {
   fetching: boolean;
@@ -63,6 +64,24 @@ const entriesCategorySlice = createSlice({
     storeFetching(state, action: PayloadAction<boolean>) {
       state.fetching = action.payload;
     },
+  },
+  extraReducers(builder) {
+    const { error, loading, success } = getThunkStatus([
+      getCategories,
+      createCategory,
+      deleteCategory,
+    ]);
+
+    builder
+      .addMatcher(error, (state) => {
+        state.fetching = false;
+      })
+      .addMatcher(success, (state) => {
+        state.fetching = false;
+      })
+      .addMatcher(loading, (state) => {
+        state.fetching = true;
+      });
   },
 });
 

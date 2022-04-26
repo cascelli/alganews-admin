@@ -78,6 +78,7 @@ export default function CashFlowExpensesView() {
         //closeIcon={<></>}
         //footer={<></>}
         footer={null}
+        destroyOnClose
       >
         <EntryCategoryManager type={'EXPENSE'} />
       </Modal>

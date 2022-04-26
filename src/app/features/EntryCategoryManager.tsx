@@ -17,7 +17,7 @@ import useEntriesCategories from '../../core/hooks/useEntriesCategories';
 export default function EntryCategoryManager(props: {
   type: 'EXPENSE' | 'REVENUE';
 }) {
-  const { expenses, fetchCategories, revenues, deleteCategory } =
+  const { expenses, fetchCategories, fetching, revenues, deleteCategory } =
     useEntriesCategories();
 
   const [showCreationModal, setShowCreationModal] = useState(false);
@@ -48,12 +48,13 @@ export default function EntryCategoryManager(props: {
         />
       </Modal>
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
-        <Button>Atualizar categorias</Button>
+        <Button onClick={fetchCategories}>Atualizar categorias</Button>
         <Button onClick={openCreationModal}>Adicionar categoria</Button>
       </Row>
       <Table<CashFlow.CategorySummary>
         size={'small'}
         rowKey={'id'}
+        loading={fetching}
         dataSource={props.type === 'EXPENSE' ? expenses : revenues}
         columns={[
           {
