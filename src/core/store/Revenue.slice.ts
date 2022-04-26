@@ -65,6 +65,19 @@ export const createRevenue = createAsyncThunk(
   }
 );
 
+export const removeRevenue = createAsyncThunk(
+  'cash-flow/revenues/removeRevenue',
+  async (revenueId: number, { dispatch, rejectWithValue }) => {
+    try {
+      await CashFlowService.removeExistingEntry(revenueId);
+      await dispatch(getRevenues());
+    } catch (err) {
+      // return rejectWithValue({ ...err });
+      if (typeof err === 'object') return rejectWithValue({ ...err });
+    }
+  }
+);
+
 export const removeEntriesInBatch = createAsyncThunk(
   'cash-flow/revenues/removeEntriesInBatch',
   async (ids: number[], { dispatch }) => {
@@ -107,6 +120,7 @@ const revenueSlice = createSlice({
       removeEntriesInBatch,
       createRevenue,
       updateRevenue,
+      removeRevenue,
     ]);
 
     builder
