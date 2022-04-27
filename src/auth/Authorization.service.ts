@@ -6,7 +6,40 @@ const authServer = axios.create({
   baseURL: 'http://localhost:8081',
 });
 
+export interface OAuthAuthorizationTokenResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type: 'bearer' | string;
+  expires_in: number;
+  scope: string;
+  [key: string]: string | number;
+}
+
 export default class AuthService {
+  public static async getFirsAccessTokens(config: {
+    code: string;
+    codeVerifier: string;
+    redirectUri: string;
+  }) {
+    const data = {
+      code: config.code,
+      code_verifier: config.codeVerifier,
+      redirect_uri: config.redirectUri,
+      grant_type: 'authorization_code',
+      client_id: 'alganews-admin',
+    };
+
+    const encodedData = qs.stringify(data);
+
+    return authServer
+      .post<OAuthAuthorizationTokenResponse>('/oauth/token', encodedData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .then((res) => res.data);
+  }
+
   public static getLoginScreenUrl(codeChallenge: string) {
     const config = qs.stringify({
       response_type: 'code',
