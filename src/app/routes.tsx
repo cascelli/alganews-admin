@@ -20,6 +20,7 @@ import { message, notification } from 'antd';
 import UserEditView from './views/UserEditView';
 import UserDetailsView from './views/UserDetails.view';
 import PaymentDetailsView from './views/PaymentDetails.view';
+import AuthService from '../auth/Authorization.service';
 
 export default function Routes() {
   useEffect(() => {
@@ -52,6 +53,19 @@ export default function Routes() {
     return () => {
       window.onunhandledrejection = null;
     };
+  }, []);
+
+  useEffect(() => {
+    async function identify() {
+      const isInAuthorizationRoute = window.location.pathname === '/authorize';
+      const accessToken = AuthService.getAccessToken();
+
+      if (!accessToken && !isInAuthorizationRoute) {
+        AuthService.imperativelySendToLoginScreen();
+      }
+    }
+
+    identify();
   }, []);
 
   return (
