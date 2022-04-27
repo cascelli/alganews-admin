@@ -12,13 +12,17 @@ interface RevenueState {
   selected: Key[];
 }
 
+const params = new URLSearchParams(window.location.search);
+const yearMonth = params.get('yearMonth');
+
 const initialState: RevenueState = {
   list: [],
   fetching: false,
   query: {
     type: 'REVENUE',
     sort: ['transactedOn', 'desc'],
-    yearMonth: moment().format('YYYY-MM'),
+    //yearMonth: moment().format('YYYY-MM'),
+    yearMonth: yearMonth || moment().format('YYYY-MM'),
   },
   selected: [],
 };
