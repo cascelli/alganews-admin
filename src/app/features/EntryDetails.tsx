@@ -40,7 +40,7 @@ export default function EntryDetails({ entryId }: EntryDetailsProps) {
       </Descriptions.Item>
 
       <Descriptions.Item label={'Data de entrada'}>
-        {moment(entry?.transactedOn).format(' DD/MM-YYYY')}
+        {moment(entry?.transactedOn).format('DD/MM-YYYY')}
       </Descriptions.Item>
 
       <Descriptions.Item label={'Valor'}>
@@ -48,8 +48,31 @@ export default function EntryDetails({ entryId }: EntryDetailsProps) {
       </Descriptions.Item>
 
       <Descriptions.Item label={'Criado em'}>
-        {moment(entry?.createdAt).format(' DD/MM-YYYY')}
+        {/* 
+            Aplicado visualizacao do horário com moment mostrando horário local
+            O banco de dados guarda data e horarios no formato UCT mas o moment converte para horário local
+        */}
+        {moment(entry?.createdAt).format('DD/MM/YYYY \\à\\s HH:mm:ss \\h')}
       </Descriptions.Item>
+
+      <Descriptions.Item label={'Criado por'}>
+        {entry?.createdBy.name}
+      </Descriptions.Item>
+
+      {entry?.createdAt !== entry?.updatedAt && (
+        <>
+          <Descriptions.Item label={'Atualizado em'}>
+            {/* 
+                Aplicado visualizacao do horário com moment mostrando horário local
+                O banco de dados guarda data e horarios no formato UCT mas o moment converte para horário local
+            */}
+            {moment(entry?.updatedAt).format('DD/MM/YYYY \\à\\s HH:mm:ss \\h')}
+          </Descriptions.Item>
+          <Descriptions.Item label={'Atualizado por'}>
+            {entry?.updatedBy.name}
+          </Descriptions.Item>
+        </>
+      )}
     </Descriptions>
   );
 }
