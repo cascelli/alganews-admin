@@ -74,6 +74,7 @@ import EntryCategoryManager from '../features/EntryCategoryManager';
 import EntryForm from '../features/EntryForm';
 import EntryDetails from '../features/EntryDetails';
 import moment from 'moment';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 
 const { Title, Text } = Typography;
 
@@ -83,6 +84,7 @@ interface EntryCRUDProps {
 
 export default function EntryCRUD({ type }: EntryCRUDProps) {
   const { selected, removeEntries, query } = useCashFlow(type);
+  const { xs } = useBreakpoint();
 
   const [editingEntry, setEditingEntry] = useState<number | undefined>(
     undefined
@@ -156,34 +158,42 @@ export default function EntryCRUD({ type }: EntryCRUDProps) {
         {detailedEntry && <EntryDetails entryId={detailedEntry} />}
       </Modal>
 
-      <Row justify={'space-between'} style={{ marginBottom: 16 }}>
-        <DoubleConfirm
-          popConfirmTitle={`Remover ${
-            selected.length > 1
-              ? type === 'EXPENSE'
-                ? 'despesas selecionadas?'
-                : 'receitas selecionadas?'
-              : type === 'EXPENSE'
-              ? 'despesa selecionada?'
-              : 'receita selecionada?'
-          }`}
-          modalTitle={
-            type === 'EXPENSE' ? 'Remover despesas' : 'Remover receitas'
-          }
-          modalContent={
-            type === 'EXPENSE'
-              ? 'Remover uma ou mais despesas pode gerar impacto negativo no gráfico de receitas e despesas da empresa. Esta é uma ação irreversível.'
-              : 'Remover uma ou mais receitas pode gerar impacto negativo no gráfico de receitas e despesas da empresa. Esta é uma ação irreversível.'
-          }
-          onConfirm={async () => {
-            await removeEntries(selected as number[]);
-          }}
-          disabled={!selected.length}
-        >
-          <Button type={'primary'} disabled={!selected.length}>
-            Remover
-          </Button>
-        </DoubleConfirm>
+      <Row
+        justify={'space-between'}
+        style={{
+          marginBottom: 16,
+          flexDirection: xs ? 'column-reverse' : 'row',
+        }}
+      >
+        <Space style={{ ...(xs && { marginTop: 16 }) }}>
+          <DoubleConfirm
+            popConfirmTitle={`Remover ${
+              selected.length > 1
+                ? type === 'EXPENSE'
+                  ? 'despesas selecionadas?'
+                  : 'receitas selecionadas?'
+                : type === 'EXPENSE'
+                ? 'despesa selecionada?'
+                : 'receita selecionada?'
+            }`}
+            modalTitle={
+              type === 'EXPENSE' ? 'Remover despesas' : 'Remover receitas'
+            }
+            modalContent={
+              type === 'EXPENSE'
+                ? 'Remover uma ou mais despesas pode gerar impacto negativo no gráfico de receitas e despesas da empresa. Esta é uma ação irreversível.'
+                : 'Remover uma ou mais receitas pode gerar impacto negativo no gráfico de receitas e despesas da empresa. Esta é uma ação irreversível.'
+            }
+            onConfirm={async () => {
+              await removeEntries(selected as number[]);
+            }}
+            disabled={!selected.length}
+          >
+            <Button danger={xs} type={'primary'} disabled={!selected.length}>
+              Remover
+            </Button>
+          </DoubleConfirm>
+        </Space>
 
         <Space>
           <Button
