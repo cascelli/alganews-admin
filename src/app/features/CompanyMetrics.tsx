@@ -1,5 +1,8 @@
 import { Area, AreaConfig } from '@ant-design/charts';
+import { Card, Space, Typography } from 'antd';
+import { LockFilled } from '@ant-design/icons';
 import { MetricService } from 'danielbonifacio-sdk';
+import { ForbiddenError } from 'danielbonifacio-sdk/dist/errors';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { useEffect, useState } from 'react';
@@ -27,11 +30,38 @@ export default function CompanyMetrics() {
     }[]
   >([]);
 
+  const [forbidden, setForbidden] = useState(false);
+
   useEffect(() => {
     MetricService.getMonthlyRevenuesExpenses()
       .then(transformDataIntoAntdChart)
-      .then(setData);
+      .then(setData)
+      .catch((err) => {
+        if (err instanceof ForbiddenError) {
+          setForbidden(true);
+          return; // Comentar se quiser mostrar mensagem de erro exibida em janela de pop-up
+        }
+
+        throw err;
+      });
   }, []);
+
+  if (forbidden)
+    return (
+      <Card style={{ minHeight: 256, display: 'flex', alignItems: 'center' }}>
+        <Space direction={'vertical'}>
+          <Space align={'center'}>
+            <LockFilled style={{ fontSize: 32 }} />
+            <Typography.Title style={{ margin: 0 }}>
+              Acesso negado
+            </Typography.Title>
+          </Space>
+          <Typography.Paragraph>
+            Você não tem permissão para visualizar estes dados
+          </Typography.Paragraph>
+        </Space>
+      </Card>
+    );
 
   const config: AreaConfig = {
     data,
@@ -44,9 +74,7 @@ export default function CompanyMetrics() {
     legend: {
       itemName: {
         formatter(legend) {
-          return legend === 'totalRevenues'
-            ? 'Receitas'
-            : 'Despesas';
+          return legend === 'totalRevenues' ? 'Receitas' : 'Despesas';
         },
       },
     },
@@ -58,18 +86,12 @@ export default function CompanyMetrics() {
       },
       formatter(data) {
         return {
-          name:
-            data.category === 'totalRevenues'
-              ? 'Receitas'
-              : 'Despesas',
-          value: (data.value as number).toLocaleString(
-            'pr-BR',
-            {
-              currency: 'BRL',
-              style: 'currency',
-              maximumFractionDigits: 2,
-            }
-          ),
+          name: data.category === 'totalRevenues' ? 'Receitas' : 'Despesas',
+          value: (data.value as number).toLocaleString('pr-BR', {
+            currency: 'BRL',
+            style: 'currency',
+            maximumFractionDigits: 2,
+          }),
         };
       },
     },
