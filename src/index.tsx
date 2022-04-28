@@ -6,11 +6,13 @@ import { ConfigProvider } from 'antd';
 import ptBR from 'antd/lib/locale/pt_BR';
 import moment from 'moment';
 import 'moment/locale/pt-br';
+
 //import App from './App'; // Substituido pelo componente Routes
 import reportWebVitals from './reportWebVitals';
 import { store } from './core/store';
 import DefaultLayout from './app/layouts/Default';
 import Routes from './app/routes';
+import './auth/HttpConfig'; // Intercepta as requisicoes
 
 // import 'antd/dist/antd.css'; //Renomeado para index.less para aplicar temas
 
