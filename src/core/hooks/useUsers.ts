@@ -1,16 +1,15 @@
-import { User, UserService } from 'danielbonifacio-sdk';
-import { useCallback, useState } from 'react';
+import { User } from 'danielbonifacio-sdk';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
-// import { getAllUsers } from '../store/User.reducer';
 import * as UserActions from '../store/User.reducer';
 
 export default function useUsers() {
   // // trabalha com estado local
   // const [users, setUsers] = useState<User.Summary[]>([]);
   const dispatch = useDispatch<AppDispatch>();
-  const users = useSelector((state: RootState) => state.user.list);
 
+  const users = useSelector((state: RootState) => state.user.list);
   const editors = useSelector((state: RootState) =>
     state.user.list.filter((user) => user.role === 'EDITOR')
   );

@@ -13,6 +13,7 @@ import { CashFlow } from 'danielbonifacio-sdk';
 import { useCallback, useEffect, useState } from 'react';
 import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import useEntriesCategories from '../../core/hooks/useEntriesCategories';
+import Forbidden from '../components/Forbidden';
 
 export default function EntryCategoryManager(props: {
   type: 'EXPENSE' | 'REVENUE';
@@ -25,9 +26,22 @@ export default function EntryCategoryManager(props: {
   const openCreationModal = useCallback(() => setShowCreationModal(true), []);
   const closeCreationModal = useCallback(() => setShowCreationModal(false), []);
 
+  const [forbidden, setForbidden] = useState(false);
+
+  // useEffect(() => {
+  //   fetchCategories();
+  // }, [fetchCategories]);
   useEffect(() => {
-    fetchCategories();
+    fetchCategories().catch((err) => {
+      if (err?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+      throw err;
+    });
   }, [fetchCategories]);
+
+  if (forbidden) return <Forbidden />;
 
   return (
     <>

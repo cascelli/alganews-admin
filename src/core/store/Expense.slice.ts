@@ -29,10 +29,14 @@ const initialState: ExpenseState = {
 
 export const getExpenses = createAsyncThunk(
   'cash-flow/expenses/getExpenses',
-  async (_, { getState, dispatch }) => {
-    const { query } = (getState() as RootState).cashFlow.expense;
-    const expenses = await CashFlowService.getAllEntries(query);
-    await dispatch(storeList(expenses));
+  async (_, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const { query } = (getState() as RootState).cashFlow.expense;
+      const expenses = await CashFlowService.getAllEntries(query);
+      await dispatch(storeList(expenses));
+    } catch (err) {
+      return rejectWithValue({ ...err });
+    }
   }
 );
 

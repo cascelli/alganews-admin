@@ -9,9 +9,7 @@ export default function useUser() {
 
   const fetchUser = useCallback(async (userId: number) => {
     try {
-      await UserService.getDetailedUser(userId).then(
-        setUser
-      );
+      await UserService.getDetailedUser(userId).then(setUser);
     } catch (error) {
       if (error instanceof ResourceNotFoundError) {
         setNotFound(true);
@@ -21,14 +19,11 @@ export default function useUser() {
     }
   }, []);
 
-  const toggleUserStatus = useCallback(
-    (user: User.Summary | User.Detailed) => {
-      return user.active
-        ? UserService.deactivateExistingUser(user.id)
-        : UserService.activateExistingUser(user.id);
-    },
-    []
-  );
+  const toggleUserStatus = useCallback((user: User.Summary | User.Detailed) => {
+    return user.active
+      ? UserService.deactivateExistingUser(user.id)
+      : UserService.activateExistingUser(user.id);
+  }, []);
 
   return {
     user,

@@ -29,10 +29,29 @@ const initialState: RevenueState = {
 
 export const getRevenues = createAsyncThunk(
   'cash-flow/revenues/getRevenues',
-  async (_, { getState, dispatch }) => {
-    const { query } = (getState() as RootState).cashFlow.revenue;
-    const revenues = await CashFlowService.getAllEntries(query);
-    await dispatch(storeList(revenues));
+  async (_, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const { query } = (getState() as RootState).cashFlow.revenue;
+      const revenues = await CashFlowService.getAllEntries(query);
+      await dispatch(storeList(revenues));
+    } catch (err) {
+      return rejectWithValue({ ...err });
+    }
+  }
+);
+
+export const createRevenue = createAsyncThunk(
+  'cash-flow/revenues/createRevenue',
+  async (revenue: CashFlow.EntryInput, { dispatch, rejectWithValue }) => {
+    try {
+      await CashFlowService.insertNewEntry(revenue);
+      await dispatch(getRevenues());
+    } catch (err) {
+      return rejectWithValue({ ...err }); // typescript V4.3.5
+      // Correcao de erro devida a versao do typescript mais recente que o do curso :
+      //if (err instanceof CustomError) return rejectWithValue({ ...err });
+      //if (typeof err === 'object') return rejectWithValue({ ...err });
+    }
   }
 );
 
@@ -44,21 +63,6 @@ export const updateRevenue = createAsyncThunk(
   ) => {
     try {
       await CashFlowService.updateExistingEntry(entryId, entry);
-      await dispatch(getRevenues());
-    } catch (err) {
-      return rejectWithValue({ ...err }); // typescript V4.3.5
-      // Correcao de erro devida a versao do typescript mais recente que o do curso :
-      //if (err instanceof CustomError) return rejectWithValue({ ...err });
-      //if (typeof err === 'object') return rejectWithValue({ ...err });
-    }
-  }
-);
-
-export const createRevenue = createAsyncThunk(
-  'cash-flow/revenues/createRevenue',
-  async (revenue: CashFlow.EntryInput, { dispatch, rejectWithValue }) => {
-    try {
-      await CashFlowService.insertNewEntry(revenue);
       await dispatch(getRevenues());
     } catch (err) {
       return rejectWithValue({ ...err }); // typescript V4.3.5
