@@ -46,10 +46,10 @@ export const updateRevenue = createAsyncThunk(
       await CashFlowService.updateExistingEntry(entryId, entry);
       await dispatch(getRevenues());
     } catch (err) {
-      //return rejectWithValue({ ...err });
+      return rejectWithValue({ ...err }); // typescript V4.3.5
       // Correcao de erro devida a versao do typescript mais recente que o do curso :
       //if (err instanceof CustomError) return rejectWithValue({ ...err });
-      if (typeof err === 'object') return rejectWithValue({ ...err });
+      //if (typeof err === 'object') return rejectWithValue({ ...err });
     }
   }
 );
@@ -61,10 +61,10 @@ export const createRevenue = createAsyncThunk(
       await CashFlowService.insertNewEntry(revenue);
       await dispatch(getRevenues());
     } catch (err) {
-      //return rejectWithValue({ ...err });
+      return rejectWithValue({ ...err }); // typescript V4.3.5
       // Correcao de erro devida a versao do typescript mais recente que o do curso :
       //if (err instanceof CustomError) return rejectWithValue({ ...err });
-      if (typeof err === 'object') return rejectWithValue({ ...err });
+      //if (typeof err === 'object') return rejectWithValue({ ...err });
     }
   }
 );
@@ -76,8 +76,8 @@ export const removeRevenue = createAsyncThunk(
       await CashFlowService.removeExistingEntry(revenueId);
       await dispatch(getRevenues());
     } catch (err) {
-      // return rejectWithValue({ ...err });
-      if (typeof err === 'object') return rejectWithValue({ ...err });
+      return rejectWithValue({ ...err }); // typescript V4.3.5
+      //if (typeof err === 'object') return rejectWithValue({ ...err });
     }
   }
 );

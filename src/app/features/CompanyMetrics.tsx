@@ -39,14 +39,14 @@ export default function CompanyMetrics() {
       .catch((err) => {
         if (err instanceof ForbiddenError) {
           setForbidden(true);
-          return; // Comentar se quiser mostrar mensagem de erro exibida em janela de pop-up
+          //return; // Comentar se quiser mostrar mensagem de erro exibida em janela de pop-up
         }
 
         throw err;
       });
   }, []);
 
-  if (forbidden)
+  if (forbidden) {
     return (
       <Card style={{ minHeight: 256, display: 'flex', alignItems: 'center' }}>
         <Space direction={'vertical'}>
@@ -62,6 +62,7 @@ export default function CompanyMetrics() {
         </Space>
       </Card>
     );
+  }
 
   const config: AreaConfig = {
     data,

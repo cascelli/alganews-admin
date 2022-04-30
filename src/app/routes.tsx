@@ -14,11 +14,11 @@ import CashFlowRevenuesView from './views/CashFlowRevenues.view';
 import PaymentCreateView from './views/PaymentCreate.view';
 import PaymentListView from './views/PaymentList.view';
 import UserCreateView from './views/UserCreate.view';
+import UserEditView from './views/UserEdit.view';
 import UserListView from './views/UserList.view';
 import { useEffect } from 'react';
 import CustomError from 'danielbonifacio-sdk/dist/CustomError';
 import { message, notification } from 'antd';
-import UserEditView from './views/UserEditView';
 import UserDetailsView from './views/UserDetails.view';
 import PaymentDetailsView from './views/PaymentDetails.view';
 import AuthService from '../auth/Authorization.service';
@@ -58,25 +58,38 @@ export default function Routes() {
   }, []);
 
   useEffect(() => {
+    // Define uma funcão assincrona com await a ser chamada posteriormente (identify)
     async function identify() {
+      // Verifica se o usuario está em uma rota de identificação
+      // Cria constante para armazenar esta informaçào
       const isInAuthorizationRoute = window.location.pathname === '/authorize';
+
+      // Armazena o code que vem retornado na rota de identificacao após
+      // informação das credenciais do usuário que está se cadastrando para uso da aplicação
       const code = new URLSearchParams(window.location.search).get('code');
 
+      // Obtém codeVerifier
       const codeVerifier = AuthService.getCodeVerifier();
+      // Obtém accessToken
       const accessToken = AuthService.getAccessToken();
 
+      // Não exista o Access Token armazenado na aplicação e
+      //  não estiver na rota de identificação, enviar para tela de login
       if (!accessToken && !isInAuthorizationRoute) {
         AuthService.imperativelySendToLoginScreen();
       }
 
+      // verifica se está na rota de autorização
       if (isInAuthorizationRoute) {
+        // Verifica se não tem o código
         if (!code) {
           notification.error({
             message: 'Código não foi informado',
           });
-          return;
+          return; // interrompe a execução
         }
 
+        // verifica se não tem um codeVerifier
         if (!codeVerifier) {
           // necessario fazer logout
           return;
@@ -90,7 +103,9 @@ export default function Routes() {
             redirectUri: 'http://localhost:3000/authorize',
           });
 
+        // armazena o AccessToken no storage local
         AuthService.setAccessToken(access_token);
+        // armazena o RefreshToken no storage local
         AuthService.setRefreshToken(refresh_token);
 
         // envia o usuario para a home
@@ -98,6 +113,7 @@ export default function Routes() {
       }
     }
 
+    // Executa funcao assincrona de identificação
     identify();
   }, []);
 

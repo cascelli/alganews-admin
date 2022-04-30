@@ -24,7 +24,7 @@ Service.setResponseInterceptors(
   (response) => response,
   async (error) => {
     //console.dir(error);
-    // recupera informações da requisição
+    // recupera informações da requisição original
     const originalRequest = error.config;
 
     // verifica se enviou um token errado ou nao passou um token
@@ -38,6 +38,7 @@ Service.setResponseInterceptors(
         refreshToken: AuthService.getRefreshToken(),
       };
 
+      // Desestrutura o codeVerifier e o refreshToken do storage
       const { codeVerifier, refreshToken } = storage;
 
       // caso algum não exita, não é possível renovar o token
@@ -52,7 +53,7 @@ Service.setResponseInterceptors(
         refreshToken,
       });
 
-      // Armazena os token para novas requisições
+      // Armazena os tokens para novas requisições
       AuthService.setAccessToken(tokens.access_token);
       AuthService.setRefreshToken(tokens.refresh_token);
 
@@ -64,5 +65,10 @@ Service.setResponseInterceptors(
       // retorna uma nova chamada do axios com essa requisição
       return axios(originalRequest);
     }
+
+    // Correção aula 17.15 - Não está capturando o erro de permissão
+    //app.algaworks.com/forum/topicos/85217/cannot-read-properties-of-undefined-reading-data
+    //return Promise.reject(error);
+    throw error;
   }
 );
