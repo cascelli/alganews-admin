@@ -22,9 +22,15 @@ import { message, notification } from 'antd';
 import UserDetailsView from './views/UserDetails.view';
 import PaymentDetailsView from './views/PaymentDetails.view';
 import AuthService from '../auth/Authorization.service';
+import jwtDecode from 'jwt-decode';
+import { Authentication } from '../auth/Auth';
+import useAuth from '../core/hooks/useAuth';
 
 export default function Routes() {
   const history = useHistory();
+
+  const { fetchUser } = useAuth();
+
   useEffect(() => {
     window.onunhandledrejection = ({ reason }) => {
       if (reason instanceof CustomError) {
@@ -111,11 +117,20 @@ export default function Routes() {
         // envia o usuario para a home
         history.push('/');
       }
+
+      // Verifica se tem um accessToken
+      if (accessToken) {
+        // Decodifica o token
+        const decodedToken: Authentication.AccessTokenDecodedBody =
+          jwtDecode(accessToken);
+        // Busca o usuario
+        fetchUser(decodedToken['alganews:user_id']);
+      }
     }
 
     // Executa funcao assincrona de identificação
     identify();
-  }, []);
+  }, [history]);
 
   return (
     // <BrowserRouter> // transferido para src/index.tsx para evitar erro

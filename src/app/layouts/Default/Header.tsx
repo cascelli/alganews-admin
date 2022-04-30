@@ -1,9 +1,12 @@
 import { Menu, Layout, Row, Avatar } from 'antd';
 import logo from '../../../assets/logo.svg';
+import useAuth from '../../../core/hooks/useAuth';
 
 const { Header } = Layout; // Primeiro importa o Layout e depois desconstroi o Header do Layout
 
 export default function DefaultLayoutHeader() {
+  const { user } = useAuth();
+
   return (
     <Header className='header no-print'>
       {/*
@@ -30,7 +33,7 @@ export default function DefaultLayoutHeader() {
       >
         {/* <div style={{ color: '#fff' }}>logo</div> */}
         <img src={logo} alt='Alganews Admin'></img>
-        <Avatar />
+        <Avatar src={user?.avatarUrls.small} />
       </Row>
     </Header>
   );
