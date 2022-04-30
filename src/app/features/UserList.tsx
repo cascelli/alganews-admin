@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import { User } from 'danielbonifacio-sdk';
 import { format, parseISO } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useUsers from '../../core/hooks/useUsers';
 import {
   EyeOutlined,
@@ -26,17 +26,29 @@ import {
 // import { createKeybindingConfig } from '@ant-design/charts';
 import { ColumnProps } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
+import { ForbiddenError } from 'danielbonifacio-sdk/dist/errors';
+import Forbidden from '../components/Forbidden';
 // import { configureStore } from '@reduxjs/toolkit';
 
 export default function UserList() {
   // define uma constante para receber o hook useUsers
-  const { users, fetchUsers, toggleUserStatus, fetching } =
-    useUsers();
+  const { users, fetchUsers, toggleUserStatus, fetching } = useUsers();
+
+  const [forbidden, setForbidden] = useState(false);
 
   // Quando carregar esse componente na aplicacao chama o metodo useEffect
   useEffect(() => {
-    fetchUsers();
+    fetchUsers().catch((err) => {
+      if (err?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+
+      throw err;
+    });
   }, [fetchUsers]); // determina fetchUsers como uma dependencia desse metodo
+
+  if (forbidden) return <Forbidden />;
 
   const getColumnSearchProps = (
     dataIndex: keyof User.Summary,
@@ -54,9 +66,7 @@ export default function UserList() {
           value={selectedKeys[0]}
           placeholder={`Buscar ${displayName || dataIndex}`}
           onChange={(e) => {
-            setSelectedKeys(
-              e.target.value ? [e.target.value] : []
-            );
+            setSelectedKeys(e.target.value ? [e.target.value] : []);
           }}
           onPressEnter={() => confirm()}
         />
@@ -70,20 +80,14 @@ export default function UserList() {
           >
             Buscar
           </Button>
-          <Button
-            onClick={clearFilters}
-            size={'small'}
-            style={{ width: 90 }}
-          >
+          <Button onClick={clearFilters} size={'small'} style={{ width: 90 }}>
             Limpar
           </Button>
         </Space>
       </Card>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined
-        style={{ color: filtered ? '#0099ff' : undefined }}
-      />
+      <SearchOutlined style={{ color: filtered ? '#0099ff' : undefined }} />
     ),
     // @ts-ignore
     onFilter: (value, record) =>
@@ -127,19 +131,10 @@ export default function UserList() {
                     {user.email}
                   </Descriptions.Item>
                   <Descriptions.Item label={'Criação'}>
-                    {format(
-                      new Date(user.createdAt),
-                      'dd/MM/yyyy'
-                    )}
+                    {format(new Date(user.createdAt), 'dd/MM/yyyy')}
                   </Descriptions.Item>
                   <Descriptions.Item label={'Perfil'}>
-                    <Tag
-                      color={
-                        user.role === 'MANAGER'
-                          ? 'red'
-                          : 'blue'
-                      }
-                    >
+                    <Tag color={user.role === 'MANAGER' ? 'red' : 'blue'}>
                       {user.role === 'EDITOR'
                         ? 'Editor'
                         : user.role === 'MANAGER'
@@ -148,14 +143,8 @@ export default function UserList() {
                     </Tag>
                   </Descriptions.Item>
                   <Descriptions.Item label={'Ações'}>
-                    <Button
-                      size='small'
-                      icon={<EyeOutlined />}
-                    />
-                    <Button
-                      size='small'
-                      icon={<EditOutlined />}
-                    />
+                    <Button size='small' icon={<EyeOutlined />} />
+                    <Button size='small' icon={<EditOutlined />} />
                   </Descriptions.Item>
                 </Descriptions>
               );
@@ -167,10 +156,7 @@ export default function UserList() {
             responsive: ['sm'],
             width: 48,
             fixed: 'left',
-            render(
-              avatarUrls: User.Summary['avatarUrls'],
-              row
-            ) {
+            render(avatarUrls: User.Summary['avatarUrls'], row) {
               return (
                 <Avatar
                   size={'small'} // define o tamanho small para deixar o avatar menor ainda
@@ -206,11 +192,7 @@ export default function UserList() {
             },
             render(role) {
               return (
-                <Tag
-                  color={
-                    role === 'MANAGER' ? 'red' : 'blue'
-                  }
-                >
+                <Tag color={role === 'MANAGER' ? 'red' : 'blue'}>
                   {role === 'EDITOR'
                     ? 'Editor'
                     : role === 'MANAGER'
@@ -227,10 +209,7 @@ export default function UserList() {
             align: 'center',
             width: 120,
             sorter(a, b) {
-              return new Date(a.createdAt) >
-                new Date(b.createdAt)
-                ? 1
-                : -1;
+              return new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
             },
             render(createdAt: string) {
               return format(
@@ -267,26 +246,14 @@ export default function UserList() {
             render(id: number) {
               return (
                 <>
-                  <Tooltip
-                    title={'Visualizar usuário'}
-                    placement={'left'}
-                  >
+                  <Tooltip title={'Visualizar usuário'} placement={'left'}>
                     <Link to={`/usuarios/${id}`}>
-                      <Button
-                        size='small'
-                        icon={<EyeOutlined />}
-                      />
+                      <Button size='small' icon={<EyeOutlined />} />
                     </Link>
                   </Tooltip>
-                  <Tooltip
-                    title={'Editar usuário'}
-                    placement={'right'}
-                  >
+                  <Tooltip title={'Editar usuário'} placement={'right'}>
                     <Link to={`/usuarios/edicao/${id}`}>
-                      <Button
-                        size='small'
-                        icon={<EditOutlined />}
-                      />
+                      <Button size='small' icon={<EditOutlined />} />
                     </Link>
                   </Tooltip>
                 </>

@@ -20,7 +20,13 @@ const initialState: UserState = {
 
 export const getAllUsers = createAsyncThunk(
   'user/getAllUsers',
-  async () => UserService.getAllUsers()
+  async (_, { rejectWithValue }) => {
+    try {
+      return await UserService.getAllUsers();
+    } catch (err) {
+      return rejectWithValue({ ...err });
+    }
+  }
 );
 
 export const toggleUserStatus = createAsyncThunk(
@@ -34,10 +40,7 @@ export const toggleUserStatus = createAsyncThunk(
   }
 );
 export default createReducer(initialState, (builder) => {
-  const success = isFulfilled(
-    getAllUsers,
-    toggleUserStatus
-  );
+  const success = isFulfilled(getAllUsers, toggleUserStatus);
   const error = isRejected(getAllUsers, toggleUserStatus);
   const loading = isPending(getAllUsers, toggleUserStatus);
 
