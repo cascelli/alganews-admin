@@ -12,7 +12,7 @@ authServer.interceptors.response.use(undefined, async (error) => {
   // (falta de tokens válidos), força o logout da aplicação e um novo login
   if (error?.response?.status === 401) {
     // Chama o método de logou imperativo quando houver erro 401
-    AuthService.imperativelySendSendToLogout();
+    AuthService.imperativelySendToLogout();
   }
 
   return Promise.reject(error);
@@ -31,7 +31,7 @@ export interface OAuthAuthorizationTokenResponse {
 
 export default class AuthService {
   // Força o logout
-  public static imperativelySendSendToLogout() {
+  public static imperativelySendToLogout() {
     // Limpa o localStorage da aplicacao
     window.localStorage.clear();
     // envia o usuário para a url de logout do sevidor de autenticação e desabilitar a sua seção

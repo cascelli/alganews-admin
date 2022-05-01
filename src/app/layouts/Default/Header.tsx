@@ -3,6 +3,9 @@ import Meta from 'antd/lib/card/Meta';
 import logo from '../../../assets/logo.svg';
 import useAuth from '../../../core/hooks/useAuth';
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import confirm from 'antd/lib/modal/confirm';
+import { Link } from 'react-router-dom';
+import AuthService from '../../../auth/Authorization.service';
 
 const { Header } = Layout; // Primeiro importa o Layout e depois desconstroi o Header do Layout
 
@@ -38,10 +41,9 @@ export default function DefaultLayoutHeader() {
         <Dropdown
           placement={'bottomRight'}
           overlay={
-            <Card style={{ width: 220 }}>
+            <Menu style={{ width: 220 }}>
               <Card bordered={false}>
                 <Meta
-                  //avatar={<Avatar src={user?.avatarUrls.small} />}
                   title={user?.name}
                   description={
                     <Tag color={user?.role === 'MANAGER' ? 'red' : 'blue'}>
@@ -54,13 +56,30 @@ export default function DefaultLayoutHeader() {
                   }
                 />
               </Card>
-              <Menu>
-                <Menu.Item icon={<UserOutlined />}>Meu perfil</Menu.Item>
-                <Menu.Item icon={<LogoutOutlined />} danger>
-                  Fazer logout
-                </Menu.Item>
-              </Menu>
-            </Card>
+              <Menu.Item icon={<UserOutlined />}>
+                <Link to={`/usuarios/${user?.id}`}>Meu perfil</Link>
+              </Menu.Item>
+              <Menu.Item
+                icon={<LogoutOutlined />}
+                onClick={() =>
+                  confirm({
+                    title: 'Fazer logout',
+                    content:
+                      'Deseja realmente fazer o logout? Será necessário inserir as credenciais novamente.',
+                    onOk() {
+                      AuthService.imperativelySendToLogout();
+                    },
+                    closable: true,
+                    okButtonProps: { danger: true },
+                    okText: 'Fazer logout',
+                    cancelText: 'Permanecer logado',
+                  })
+                }
+                danger
+              >
+                Fazer logout
+              </Menu.Item>
+            </Menu>
           }
         >
           <Avatar src={user?.avatarUrls.small} />
