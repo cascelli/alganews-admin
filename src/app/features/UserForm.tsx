@@ -12,16 +12,8 @@ import {
   Tabs,
   Upload,
 } from 'antd';
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import {
-  FileService,
-  User,
-  UserService,
-} from 'danielbonifacio-sdk';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FileService, User, UserService } from 'danielbonifacio-sdk';
 import { UserOutlined } from '@ant-design/icons';
 import ImageCrop from 'antd-img-crop';
 import CustomError from 'danielbonifacio-sdk/dist/CustomError';
@@ -37,10 +29,7 @@ type UserFormType = {
   createdAt: Moment;
   updatedAt: Moment;
   birthdate: Moment;
-} & Omit<
-  User.Detailed,
-  'createdAt' | 'updatedAt' | 'birthdate'
->;
+} & Omit<User.Detailed, 'createdAt' | 'updatedAt' | 'birthdate'>;
 
 interface UserFormProps {
   user?: UserFormType;
@@ -53,24 +42,19 @@ export default function UserForm(props: UserFormProps) {
   const [form] = Form.useForm<User.Input>();
   const [loading, setLoading] = useState(false);
 
-  const [avatar, setAvatar] = useState(
-    props.user?.avatarUrls.default || ''
+  const [avatar, setAvatar] = useState(props.user?.avatarUrls.default || '');
+  const [activeTab, setActiveTab] = useState<'personal' | 'bankAccount'>(
+    'personal'
   );
-  const [activeTab, setActiveTab] = useState<
-    'personal' | 'bankAccount'
-  >('personal');
 
   const [isEditorRole, setIsEditorRole] = useState(
     props.user?.role === 'EDITOR'
   );
 
-  const handleAvatarUpload = useCallback(
-    async (file: File) => {
-      const avatarSource = await FileService.upload(file);
-      setAvatar(avatarSource);
-    },
-    []
-  );
+  const handleAvatarUpload = useCallback(async (file: File) => {
+    const avatarSource = await FileService.upload(file);
+    setAvatar(avatarSource);
+  }, []);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -90,8 +74,7 @@ export default function UserForm(props: UserFormProps) {
         let personalDataErrors = 0;
 
         fields.errorFields.forEach(({ name }) => {
-          if (name.includes('bankAccount'))
-            bankAccountErrors++;
+          if (name.includes('bankAccount')) bankAccountErrors++;
           if (
             name.includes('location') ||
             name.includes('skills') ||
@@ -162,9 +145,7 @@ export default function UserForm(props: UserFormProps) {
                           str !== ''
                       )
                       .map((str) =>
-                        isNaN(Number(str))
-                          ? str
-                          : Number(str)
+                        isNaN(Number(str)) ? str : Number(str)
                       ) as string[],
                     errors: [error.userMessage],
                   };
@@ -309,20 +290,15 @@ export default function UserForm(props: UserFormProps) {
             ]}
           >
             <Select
+              disabled={!props.user?.canSensitiveDataBeUpdated}
               onChange={(value) => {
                 setIsEditorRole(value === 'EDITOR');
               }}
               placeholder={'Selecione um perfil'}
             >
-              <Select.Option value={'EDITOR'}>
-                Editor
-              </Select.Option>
-              <Select.Option value={'ASSISTANT'}>
-                Assistente
-              </Select.Option>
-              <Select.Option value={'MANAGER'}>
-                Gerente
-              </Select.Option>
+              <Select.Option value={'EDITOR'}>Editor</Select.Option>
+              <Select.Option value={'ASSISTANT'}>Assistente</Select.Option>
+              <Select.Option value={'MANAGER'}>Gerente</Select.Option>
             </Select>
           </Form.Item>
         </Col>
@@ -343,6 +319,7 @@ export default function UserForm(props: UserFormProps) {
           >
             <Input
               type='email'
+              disabled={!props.user?.canSensitiveDataBeUpdated}
               placeholder={'E.g.: contato@joao.silva'}
             ></Input>
           </Form.Item>
@@ -355,16 +332,9 @@ export default function UserForm(props: UserFormProps) {
             defaultActiveKey={'personal'}
             type='card'
             activeKey={activeTab}
-            onChange={(tab) =>
-              setActiveTab(
-                tab as 'personal' | 'bankAccount'
-              )
-            }
+            onChange={(tab) => setActiveTab(tab as 'personal' | 'bankAccount')}
           >
-            <TabPane
-              key={'personal'}
-              tab={'Dados pessoais'}
-            >
+            <TabPane key={'personal'} tab={'Dados pessoais'}>
               <Row gutter={24}>
                 <Col xs={24} lg={8}>
                   <Form.Item
@@ -399,9 +369,7 @@ export default function UserForm(props: UserFormProps) {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder={'E.g: Espírito Santo'}
-                    />
+                    <Input placeholder={'E.g: Espírito Santo'} />
                   </Form.Item>
                 </Col>
                 <Col xs={24} lg={8}>
@@ -441,6 +409,7 @@ export default function UserForm(props: UserFormProps) {
                     <MaskedInput
                       mask={'(00) [0]0000-0000'}
                       placeholder={'(27) 99999-0000'}
+                      disabled={!props.user?.canSensitiveDataBeUpdated}
                     />
                   </Form.Item>
                 </Col>
@@ -489,14 +458,12 @@ export default function UserForm(props: UserFormProps) {
                         rules={[
                           {
                             required: true,
-                            message:
-                              'O campo é obrigatório',
+                            message: 'O campo é obrigatório',
                           },
                           {
                             type: 'number',
                             min: 0.01,
-                            message:
-                              'O valor mínimo é 1 centavo',
+                            message: 'O valor mínimo é 1 centavo',
                           },
                         ]}
                       >
@@ -517,16 +484,11 @@ export default function UserForm(props: UserFormProps) {
                           <Col xs={18} lg={6}>
                             <Form.Item
                               label={'Habilidade'}
-                              name={[
-                                'skills',
-                                index,
-                                'name',
-                              ]}
+                              name={['skills', index, 'name']}
                               rules={[
                                 {
                                   required: true,
-                                  message:
-                                    'O campo é obrigatório',
+                                  message: 'O campo é obrigatório',
                                 },
                                 {
                                   max: 50,
@@ -534,47 +496,28 @@ export default function UserForm(props: UserFormProps) {
                                 },
                               ]}
                             >
-                              <Input
-                                placeholder={
-                                  'E.g.: Javascript'
-                                }
-                              />
+                              <Input placeholder={'E.g.: Javascript'} />
                             </Form.Item>
                           </Col>
                           <Col xs={6} lg={2}>
                             <Form.Item
                               label={'%'}
-                              name={[
-                                'skills',
-                                index,
-                                'percentage',
-                              ]}
+                              name={['skills', index, 'percentage']}
                               rules={[
                                 {
                                   required: true,
                                   message: '',
                                 },
                                 {
-                                  async validator(
-                                    field,
-                                    value
-                                  ) {
-                                    if (
-                                      isNaN(Number(value))
-                                    )
-                                      throw new Error(
-                                        'Apenas números'
-                                      );
+                                  async validator(field, value) {
+                                    if (isNaN(Number(value)))
+                                      throw new Error('Apenas números');
 
                                     if (Number(value) > 100)
-                                      throw new Error(
-                                        'Máx 100'
-                                      );
+                                      throw new Error('Máx 100');
 
                                     if (Number(value) < 0)
-                                      throw new Error(
-                                        'Mín 0'
-                                      );
+                                      throw new Error('Mín 0');
                                   },
                                 },
                               ]}
@@ -684,11 +627,7 @@ export default function UserForm(props: UserFormProps) {
                       },
                     ]}
                   >
-                    <Select
-                      placeholder={
-                        'Selecione o tipo de conta'
-                      }
-                    >
+                    <Select placeholder={'Selecione o tipo de conta'}>
                       <Select.Option value={'SAVING'}>
                         Conta poupança
                       </Select.Option>
@@ -704,14 +643,8 @@ export default function UserForm(props: UserFormProps) {
         </Col>
         <Col xs={24}>
           <Row justify={'end'}>
-            <Button
-              loading={loading}
-              type={'primary'}
-              htmlType={'submit'}
-            >
-              {!props.user
-                ? 'Cadastrar Usuário'
-                : 'Atualizar Usuário'}
+            <Button loading={loading} type={'primary'} htmlType={'submit'}>
+              {!props.user ? 'Cadastrar Usuário' : 'Atualizar Usuário'}
             </Button>
           </Row>
         </Col>
