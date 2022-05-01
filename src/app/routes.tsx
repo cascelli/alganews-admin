@@ -114,6 +114,12 @@ export default function Routes() {
         // armazena o RefreshToken no storage local
         AuthService.setRefreshToken(refresh_token);
 
+        // Decodifica o token
+        const decodedToken: Authentication.AccessTokenDecodedBody =
+          jwtDecode(access_token);
+        // Busca o usuario
+        fetchUser(decodedToken['alganews:user_id']);
+
         // envia o usuario para a home
         history.push('/');
       }
@@ -130,7 +136,7 @@ export default function Routes() {
 
     // Executa funcao assincrona de identificação
     identify();
-  }, [history]);
+  }, [history, fetchUser]);
 
   return (
     // <BrowserRouter> // transferido para src/index.tsx para evitar erro
