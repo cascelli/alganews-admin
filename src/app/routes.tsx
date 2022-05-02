@@ -96,12 +96,15 @@ export default function Routes() {
           notification.error({
             message: 'Código não foi informado',
           });
+          // Envia para a tela de login
+          AuthService.imperativelySendToLoginScreen();
           return; // interrompe a execução
         }
 
         // verifica se não tem um codeVerifier
         if (!codeVerifier) {
           // necessario fazer logout
+          AuthService.imperativelySendToLogout();
           return;
         }
 
