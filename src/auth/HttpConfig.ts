@@ -70,6 +70,11 @@ Service.setResponseInterceptors(
     // Correção aula 17.15 - Não está capturando o erro de permissão
     //app.algaworks.com/forum/topicos/85217/cannot-read-properties-of-undefined-reading-data
     //return Promise.reject(error);
+    //throw error;
+    //
+    // Retornando o erro para poder fazer qualquer outra trataviva - Corrigido na aula 17.35
+    //return Promise.reject(error);
+    // Correção final adotada
     throw error;
   }
 );
