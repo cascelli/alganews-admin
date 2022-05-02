@@ -110,10 +110,11 @@ export default function EntryCRUD({ type }: EntryCRUDProps) {
   return (
     <>
       <Modal
-        title={'Gerenciar Categoria'}
+        title={'Gerenciar Categorias'}
         visible={showCategoryModal}
         onCancel={closeCategoryModal}
         //closeIcon={<></>}
+        //closeIcon={null}
         //footer={<></>}
         footer={null}
         destroyOnClose
@@ -122,6 +123,7 @@ export default function EntryCRUD({ type }: EntryCRUDProps) {
       </Modal>
 
       <Modal
+        //closeIcon={null}
         title={type === 'EXPENSE' ? 'Cadastrar despesa' : 'Cadastrar receita'}
         visible={showFormModal}
         onCancel={() => {
@@ -137,7 +139,10 @@ export default function EntryCRUD({ type }: EntryCRUDProps) {
           onSuccess={() => {
             closeFormModal();
             notification.success({
-              message: 'Entrada cadastrada com sucesso !',
+              message:
+                type === 'EXPENSE'
+                  ? 'Despesa cadastrada com sucesso'
+                  : 'Receita cadastrada com sucesso',
             });
           }}
         />
