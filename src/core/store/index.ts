@@ -11,6 +11,7 @@ import expenseReducer from './Expense.slice';
 import revenueReducer from './Revenue.slice';
 import entriesCategoryReducer from './EntriesCategory.slice';
 import authReducer from './Auth.slice';
+import uiReducer from './UI.slice';
 
 const observeActions: Middleware = () => (next) => (action) => {
   if (isRejected(action)) {
@@ -40,12 +41,14 @@ const cashFlowReducer = combineReducers({
   category: entriesCategoryReducer,
 });
 
+// Registra os reducers na store
 export const store = configureStore({
   reducer: {
     user: UserReducer,
     payment: PaymentReducer,
     cashFlow: cashFlowReducer,
     auth: authReducer,
+    ui: uiReducer,
   },
   middleware: function (getDefaultMiddlewares) {
     return getDefaultMiddlewares().concat(observeActions);
