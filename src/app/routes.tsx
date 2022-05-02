@@ -6,6 +6,7 @@ import {
   Route,
   Switch,
   useHistory,
+  useLocation,
 } from 'react-router-dom';
 
 import HomeView from './views/Home.view';
@@ -16,7 +17,7 @@ import PaymentListView from './views/PaymentList.view';
 import UserCreateView from './views/UserCreate.view';
 import UserEditView from './views/UserEdit.view';
 import UserListView from './views/UserList.view';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import CustomError from 'danielbonifacio-sdk/dist/CustomError';
 import { message, notification } from 'antd';
 import UserDetailsView from './views/UserDetails.view';
@@ -25,11 +26,14 @@ import AuthService from '../auth/Authorization.service';
 import jwtDecode from 'jwt-decode';
 import { Authentication } from '../auth/Auth';
 import useAuth from '../core/hooks/useAuth';
+import GlobalLoading from './components/GlobalLoading';
 
 export default function Routes() {
   const history = useHistory();
 
-  const { fetchUser } = useAuth();
+  const location = useLocation();
+
+  const { fetchUser, user } = useAuth();
 
   useEffect(() => {
     window.onunhandledrejection = ({ reason }) => {
@@ -137,6 +141,13 @@ export default function Routes() {
     // Executa funcao assincrona de identificação
     identify();
   }, [history, fetchUser]);
+
+  const isAuthorizationRoute = useMemo(
+    () => location.pathname === '/authorize',
+    [location.pathname]
+  );
+
+  if (isAuthorizationRoute || !user) return <GlobalLoading />;
 
   return (
     // <BrowserRouter> // transferido para src/index.tsx para evitar erro
