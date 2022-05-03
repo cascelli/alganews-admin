@@ -29,10 +29,9 @@ import useAuth from '../core/hooks/useAuth';
 import GlobalLoading from './components/GlobalLoading';
 
 export default function Routes() {
+  // Necessários na lógica de autenticação
   const history = useHistory();
-
   const location = useLocation();
-
   const { fetchUser, user } = useAuth();
 
   useEffect(() => {
@@ -67,6 +66,8 @@ export default function Routes() {
     };
   }, []);
 
+  // -- Lógica de autenticação - início ---
+  // --
   useEffect(() => {
     // Define uma funcão assincrona com await a ser chamada posteriormente (identify)
     async function identify() {
@@ -151,6 +152,8 @@ export default function Routes() {
   );
 
   if (isAuthorizationRoute || !user) return <GlobalLoading />;
+  // --
+  // -- Lógica de autenticação - fim ---
 
   return (
     // <BrowserRouter> // transferido para src/index.tsx para evitar erro
