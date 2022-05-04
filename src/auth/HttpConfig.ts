@@ -2,6 +2,12 @@ import axios from 'axios';
 import Service from 'danielbonifacio-sdk/dist/Service';
 import AuthService from './Authorization.service';
 
+// Usando variavel de ambiente para determinar valores
+const { REACT_APP_API_BASE_URL } = process.env;
+
+// Ajustando a base URL da API no danielbonifacio-sdk
+if (REACT_APP_API_BASE_URL) Service.setBaseUrl(REACT_APP_API_BASE_URL);
+
 // Define um interceptador de requisiçoes
 Service.setRequestInterceptors(async (request) => {
   //console.log(request); // Mostra as requisicoes http interceptadas
