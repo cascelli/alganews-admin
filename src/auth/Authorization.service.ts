@@ -2,6 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 import pkceChallenge from 'pkce-challenge';
 
+// Usando variavel de ambiente para determinar valores
 const APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 const AUTH_BASE_URL = process.env.REACT_APP_AUTH_SERVER_BASE_URL;
 

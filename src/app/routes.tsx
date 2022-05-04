@@ -28,6 +28,7 @@ import { Authentication } from '../auth/Auth';
 import useAuth from '../core/hooks/useAuth';
 import GlobalLoading from './components/GlobalLoading';
 
+// Usando variavel de ambiente para determinar valores
 const APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Routes() {
