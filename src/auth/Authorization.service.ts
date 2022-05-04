@@ -2,8 +2,12 @@ import axios from 'axios';
 import qs from 'qs';
 import pkceChallenge from 'pkce-challenge';
 
+const APP_BASE_URL = process.env.REACT_APP_BASE_URL;
+const AUTH_BASE_URL = process.env.REACT_APP_AUTH_SERVER_BASE_URL;
+
 const authServer = axios.create({
-  baseURL: 'http://localhost:8081',
+  //baseURL: 'http://localhost:8081',
+  baseURL: `${AUTH_BASE_URL}`,
 });
 
 // Gera um interceptador de resposta para interceptar as funcoes de erro
@@ -37,7 +41,8 @@ export default class AuthService {
     // envia o usuário para a url de logout do sevidor de autenticação e desabilitar a sua seção
     // do lado do servidor e o redireciona para a página inicial da aplicação
     // que devido au fluxo de login implementado vai direcioná-lo para uma nova autenticação
-    window.location.href = `http://localhost:8081/logout?redirect=http://localhost:3000`;
+    //window.location.href = `http://localhost:8081/logout?redirect=http://localhost:3000`;
+    window.location.href = `${AUTH_BASE_URL}/logout?redirect=${APP_BASE_URL}`;
   }
 
   // Recupera/Renova token
@@ -108,7 +113,8 @@ export default class AuthService {
       code_challenge_method: 'S256',
     });
 
-    return `http://localhost:8081/oauth/authorize?${config}`;
+    //return `http://localhost:8081/oauth/authorize?${config}`;
+    return `${AUTH_BASE_URL}/oauth/authorize?${config}`;
   }
 
   public static async imperativelySendToLoginScreen() {

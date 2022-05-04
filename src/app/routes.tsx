@@ -28,6 +28,8 @@ import { Authentication } from '../auth/Auth';
 import useAuth from '../core/hooks/useAuth';
 import GlobalLoading from './components/GlobalLoading';
 
+const APP_BASE_URL = process.env.REACT_APP_BASE_URL;
+
 export default function Routes() {
   // Necessários na lógica de autenticação
   const history = useHistory();
@@ -114,7 +116,8 @@ export default function Routes() {
           await AuthService.getFirsAccessTokens({
             code,
             codeVerifier,
-            redirectUri: 'http://localhost:3000/authorize',
+            //redirectUri: 'http://localhost:3000/authorize',
+            redirectUri: `${APP_BASE_URL}/authorize`,
           });
 
         // armazena o AccessToken no storage local
